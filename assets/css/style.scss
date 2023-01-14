@@ -1,0 +1,16 @@
+---
+---
+
+@import "{{ site.theme }";
+
+body {
+  color: #333;
+}
+
+a {
+  color: #333;
+}
+
+a:hover, a:active {
+  color: #000;
+}
