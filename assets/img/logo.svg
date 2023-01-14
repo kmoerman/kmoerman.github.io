@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg viewBox="185.803 18.976 295.026 295.315" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <rect id="p" width="8" height="8"></rect>
-  </defs>
-  <g fill="#000000" transform="matrix(1, 0, 0, 1, 185.009718, 20.932044)">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="32 32 232 232">
+  <g fill="#000000" transform="matrix(1, 0, 0 , 1, 0, 0)">
     <rect width="8" height="8" transform="matrix(1, 0, 0, 1, 32, 32)"></rect>
     <rect width="8" height="8" transform="matrix(1, 0, 0, 1, 32, 40)"></rect>
     <rect width="8" height="8" transform="matrix(1, 0, 0, 1, 32, 48)"></rect>
@@ -421,32 +418,32 @@
     <rect width="8" height="8" transform="matrix(1, 0, 0, 1, 256, 168)"></rect>
     <rect width="8" height="8" transform="matrix(1, 0, 0, 1, 256, 176)"></rect>
     <rect width="8" height="8" transform="matrix(1, 0, 0, 1, 256, 184)"></rect>
-    <rect width="8" height="8" x="208" y="208"></rect>
-    <rect width="8" height="8" x="208" y="216"></rect>
-    <rect width="8" height="8" x="208" y="224"></rect>
-    <rect width="8" height="8" x="208" y="232"></rect>
-    <rect width="8" height="8" x="208" y="240"></rect>
-    <rect width="8" height="8" x="208" y="248"></rect>
-    <rect width="8" height="8" x="208" y="256"></rect>
-    <rect width="8" height="8" x="216" y="208"></rect>
-    <rect width="8" height="8" x="216" y="256"></rect>
-    <rect width="8" height="8" x="224" y="208"></rect>
-    <rect width="8" height="8" x="224" y="256"></rect>
-    <rect width="8" height="8" x="232" y="208"></rect>
-    <rect width="8" height="8" x="232" y="256"></rect>
-    <rect width="8" height="8" x="240" y="208"></rect>
-    <rect width="8" height="8" x="240" y="256"></rect>
-    <rect width="8" height="8" x="248" y="208"></rect>
-    <rect width="8" height="8" x="248" y="256"></rect>
-    <rect width="8" height="8" x="256" y="208"></rect>
-    <rect width="8" height="8" x="256" y="216"></rect>
-    <rect width="8" height="8" x="256" y="224"></rect>
-    <rect width="8" height="8" x="256" y="232"></rect>
-    <rect width="8" height="8" x="256" y="240"></rect>
-    <rect width="8" height="8" x="256" y="248"></rect>
-    <rect width="8" height="8" x="256" y="256"></rect>
-  </g>
-  <g fill="#000000" transform="matrix(1, 0, 0, 1, 0.9, 0)">
-    <path d="M 406.851 272.3 L 416.953 257.131 L 406.853 241.964 L 414.493 241.964 L 434.646 272.298 L 427.081 272.298 L 420.75 262.735 L 414.491 272.298 L 406.851 272.3 Z"></path>
+    <rect width="8" height="8" transform="matrix(1, 0, 0, 1, 208, 208)"></rect>
+    <rect width="8" height="8" transform="matrix(1, 0, 0, 1, 208, 216)"></rect>
+    <rect width="8" height="8" transform="matrix(1, 0, 0, 1, 208, 224)"></rect>
+    <rect width="8" height="8" transform="matrix(1, 0, 0, 1, 208, 232)"></rect>
+    <rect width="8" height="8" transform="matrix(1, 0, 0, 1, 208, 240)"></rect>
+    <rect width="8" height="8" transform="matrix(1, 0, 0, 1, 208, 248)"></rect>
+    <rect width="8" height="8" transform="matrix(1, 0, 0, 1, 208, 256)"></rect>
+    <rect width="8" height="8" transform="matrix(1, 0, 0, 1, 216, 208)"></rect>
+    <rect width="8" height="8" transform="matrix(1, 0, 0, 1, 216, 256)"></rect>
+    <rect width="8" height="8" transform="matrix(1, 0, 0, 1, 224, 208)"></rect>
+    <rect width="8" height="8" transform="matrix(1, 0, 0, 1, 224, 256)"></rect>
+    <rect width="8" height="8" transform="matrix(1, 0, 0, 1, 232, 208)"></rect>
+    <rect width="8" height="8" transform="matrix(1, 0, 0, 1, 232, 256)"></rect>
+    <rect width="8" height="8" transform="matrix(1, 0, 0, 1, 240, 208)"></rect>
+    <rect width="8" height="8" transform="matrix(1, 0, 0, 1, 240, 256)"></rect>
+    <rect width="8" height="8" transform="matrix(1, 0, 0, 1, 248, 208)"></rect>
+    <rect width="8" height="8" transform="matrix(1, 0, 0, 1, 248, 256)"></rect>
+    <rect width="8" height="8" transform="matrix(1, 0, 0, 1, 256, 208)"></rect>
+    <rect width="8" height="8" transform="matrix(1, 0, 0, 1, 256, 216)"></rect>
+    <rect width="8" height="8" transform="matrix(1, 0, 0, 1, 256, 224)"></rect>
+    <rect width="8" height="8" transform="matrix(1, 0, 0, 1, 256, 232)"></rect>
+    <rect width="8" height="8" transform="matrix(1, 0, 0, 1, 256, 240)"></rect>
+    <rect width="8" height="8" transform="matrix(1, 0, 0, 1, 256, 248)"></rect>
+    <rect width="8" height="8" transform="matrix(1, 0, 0, 1, 256, 256)"></rect>
+    <g fill="#000000" transform="matrix(1, 0, 0, 1, -184.154526, -21.413052)">
+      <path d="M 406.851 272.3 L 416.953 257.131 L 406.853 241.964 L 414.493 241.964 L 434.646 272.298 L 427.081 272.298 L 420.75 262.735 L 414.491 272.298 L 406.851 272.3 Z"></path>
+    </g>
   </g>
 </svg>

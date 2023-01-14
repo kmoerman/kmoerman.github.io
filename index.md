@@ -1,5 +1,6 @@
 ---
-layout: default
+layout: page
+title: Klaas Moerman
 ---
 
-Test
+🚧 *under construction ...*
