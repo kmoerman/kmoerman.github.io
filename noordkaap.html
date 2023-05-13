@@ -28,7 +28,8 @@
       tiles.addTo(map);
       
       const markers = 
-        [ [51.21543, 2.928656, '2023-05-12T15:55:43+02:00', 'Nog niet vertrokken.']
+        [ [51.2406477, 2.9161213, '13/5 14:00', 'Start']
+	, [51.5762520, 3.6173393, '13/5 19:00', '']
         ]
       
       markers.forEach(([lat, lon, dat, msg]) => L.marker([lat, lon]).addTo(map).bindPopup(`<b>${dat}</b> ${msg}`))
