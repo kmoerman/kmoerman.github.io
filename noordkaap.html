@@ -35,7 +35,7 @@
 				 , continuousWorld: false
 				 })
       //proj4.defs("EPSG:3576","+proj=laea +lat_0=90 +lon_0=90 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +type=crs");
-      const crs = new L.Proj.CRS("EPSG:3576","+proj=laea +lat_0=90 +lon_0=90 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +type=crs");
+      const crs = new L.Proj.CRS("EPSG:3575","+proj=laea +lat_0=90 +lon_0=10 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +type=crs");
       const map = L.map('map', {crs:crs}).setView([59.9139, 10.7522], 5);
       tiles.addTo(map);
       
