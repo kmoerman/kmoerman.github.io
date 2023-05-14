@@ -39,7 +39,7 @@
 	, [51.5762520, 3.6173393, '13/5 19:00']
         ]
       
-      markers.forEach(([lat, lon, dat, msg]) => L.marker([lat, lon]).addTo(map).bindPopup(`<b>${dat}</b>${msg ? ' '+msg : ''}`)
+      markers.forEach(([lat, lon, dat, msg]) => L.marker([lat, lon]).addTo(map).bindPopup(`<b>${dat}</b>${msg ? ' '+msg : ''}`))
     </script>
 </body>
 </html>
