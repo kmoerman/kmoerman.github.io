@@ -24,34 +24,6 @@
     <script>
 const MIN_ZOOM = 1;
 const MAX_ZOOM = 16;
-const TILE_SIZE = 512;
-
-
-<html>
-<head>
-    <title>Noordkaap</title>
-    <meta charset="utf-8" />
-    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
-    <style type="text/css">
-        body {
-            padding: 0;
-            margin: 0;
-        }
-        html, body, #map {
-            height: 100%;
-            width: 100%;
-        }
-    </style>
-</head>
-<body>
-    <div id="map"></div>
-    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.9.0/proj4-src.min.js" integrity="sha512-/m2nN2PEj09X+JmYxYn/ObL2yp5jPXoQuYQvWM7e+AWNtoqi9zpAhEnhcaJoKEwES7I5KCQSnESHBWWhqijgNA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4leaflet/1.0.2/proj4leaflet.min.js" integrity="sha512-GsAYl1wxzWW6azVpXkhyYfjMb2LbaOnlrqWMBdAk9xDcilinFvGMN+48Ajp/10u/9lcnh8YyS2CYNgung7ewHg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>
-const MIN_ZOOM = 1;
-const MAX_ZOOM = 16;
 const tile_size = 512;
 
 var maxResolution = ((extent - -extent) / tile_size);
