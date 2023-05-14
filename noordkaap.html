@@ -19,16 +19,27 @@
 <body>
     <div id="map"></div>
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.9.0/proj4-src.min.js" integrity="sha512-/m2nN2PEj09X+JmYxYn/ObL2yp5jPXoQuYQvWM7e+AWNtoqi9zpAhEnhcaJoKEwES7I5KCQSnESHBWWhqijgNA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4leaflet/1.0.2/proj4leaflet.min.js" integrity="sha512-GsAYl1wxzWW6azVpXkhyYfjMb2LbaOnlrqWMBdAk9xDcilinFvGMN+48Ajp/10u/9lcnh8YyS2CYNgung7ewHg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-      const map = L.map('map').setView([59.9139, 10.7522], 5);
+      
+      /*
       const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                        { maxZoom: 17
 	               , attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
                        });
-        
+      */
+      const tiles = L.tileLayer('http://tiles.arcticconnect.ca/osm_3575/{z}/{x}/{y}.png'
+	                       , { maxZoom: 17
+			         , attribution: 'Map &copy; <a href="https://arcticconnect.ca/">ArcticConnect</a>. Data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+				 , continuousWorld: false
+				 })
+      //proj4.defs("EPSG:3576","+proj=laea +lat_0=90 +lon_0=90 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +type=crs");
+      const crs = new L.Proj.CRS("EPSG:3576","+proj=laea +lat_0=90 +lon_0=90 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +type=crs");
+      const map = L.map('map', {crs:crs}).setView([59.9139, 10.7522], 5);
       tiles.addTo(map);
       
-      const opts = L.Icon. Default.prototype.options;
+      // const opts = L.Icon. Default.prototype.options;
       // opts.iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-gold.png';
       // opts.iconRetinaUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png';
       // opts.iconSize = opts.iconSize.multiplyBy(0.75);
