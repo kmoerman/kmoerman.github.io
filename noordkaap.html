@@ -29,6 +29,7 @@
 	               , attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
                        });
       */
+      /*
       const tiles = L.tileLayer('http://tiles.arcticconnect.ca/osm_3575/{z}/{x}/{y}.png'
 	                       , { maxZoom: 17
 			         , attribution: 'Map &copy; <a href="https://arcticconnect.ca/">ArcticConnect</a>. Data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -38,6 +39,41 @@
       const crs = new L.Proj.CRS("EPSG:3575","+proj=laea +lat_0=90 +lon_0=10 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +type=crs");
       const map = L.map('map', {crs:crs}).setView([59.9139, 10.7522], 5);
       tiles.addTo(map);
+      */
+	    
+const MAX_ZOOM = 16;
+const TILE_SIZE = 512;
+
+const extent = Math.sqrt(2) * 6371007.2;
+const resolutions = Array(MAX_ZOOM + 1) 
+  .fill() 
+  .map((_, i) => extent / TILE_SIZE / Math.pow(2, i - 1));
+  
+const crs = new L.Proj.CRS(
+  "EPSG:3575", 
+  "+proj=laea +lat_0=90 +lon_0=10 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs", 
+  { 
+    origin: [-extent, extent], 
+    bounds: L.bounds(
+      L.point(-extent, extent), 
+      L.point(extent, -extent)
+    ), 
+    resolutions: resolutions 
+  });
+	    
+const tiles = L.tileLayer('http://tiles.arcticconnect.ca/osm_3575/{z}/{x}/{y}.png'
+	                       , { maxZoom: MAX_ZOOM
+			         , attribution: 'Map &copy; <a href="https://arcticconnect.ca/">ArcticConnect</a>. Data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+				 , continuousWorld: true
+				 });
+
+
+const map = L.map('map', {crs:crs}).setView([59.9139, 10.7522], 5);
+
+tiles.addTo(map);
+  
+const ARCTIC_TILES_URL = 
+  "https://tile.gbif.org/3575/omt/{z}/{x}/{y}@4x.png?style=osm-bright-en";
       
       // const opts = L.Icon. Default.prototype.options;
       // opts.iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-gold.png';
