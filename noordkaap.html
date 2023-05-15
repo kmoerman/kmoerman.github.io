@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Noordkaap</title>
+    <meta charset="utf-8" />
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+     integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+     crossorigin=""/>
+    <style type="text/css">
+        body {
+            padding: 0;
+            margin: 0;
+        }
+        html, body, #map {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+     integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+     crossorigin=""></script>
+<script>
+const map = L.map('map')
+             .setView([59.9139, 10.7522], 5)
+
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
+ 
+// const opts = L.Icon.Default.prototype.options;
+// opts.iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-gold.png';
+// opts.iconRetinaUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png';
+// opts.iconSize = opts.iconSize.multiplyBy(0.75);
+// opts.iconAnchor = opts.iconAnchor.multiplyBy(0.75);
+      
+const markers = 
+  [ [51.2406477, 2.9161213, '13/5 14:00', 'Start']
+  , [51.5762520, 3.6173393, '13/5 19:00']
+  , [52.0935209, 5.1114410, '14/5 19:50']
+  ]
+
+markers.forEach(([lat, lon, dat, msg]) => L.marker([lat, lon]).addTo(map).bindPopup(`<b>${dat}</b>${msg ? ' '+msg : ''}`))
+    </script>
+</body>
+</html>
