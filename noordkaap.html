@@ -23,7 +23,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4leaflet/1.0.2/proj4leaflet.min.js" integrity="sha512-GsAYl1wxzWW6azVpXkhyYfjMb2LbaOnlrqWMBdAk9xDcilinFvGMN+48Ajp/10u/9lcnh8YyS2CYNgung7ewHg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
 const maxZoom  =  16
-const tileSize = 512
+const tileSize = 256
 const extent = L.Projection.Mercator.R * Math.PI
 const origin = [-extent, extent]
 const maxResolution = ((extent - -extent) / tileSize)
