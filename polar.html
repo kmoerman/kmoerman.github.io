@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Noordkaap</title>
+    <meta charset="utf-8" />
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" crossorigin="" />
+    <style type="text/css">
+        body {
+            padding: 0;
+            margin: 0;
+        }
+        html, body, #map {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet-src.js" crossorigin=""></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.9.0/proj4-src.min.js" integrity="sha512-/m2nN2PEj09X+JmYxYn/ObL2yp5jPXoQuYQvWM7e+AWNtoqi9zpAhEnhcaJoKEwES7I5KCQSnESHBWWhqijgNA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4leaflet/1.0.2/proj4leaflet.min.js" integrity="sha512-GsAYl1wxzWW6azVpXkhyYfjMb2LbaOnlrqWMBdAk9xDcilinFvGMN+48Ajp/10u/9lcnh8YyS2CYNgung7ewHg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+const maxZoom  =  16
+const tileSize = 256
+const extent = L.Projection.Mercator.R * Math.PI
+const origin = [-extent, extent]
+const maxResolution = ((extent - -extent) / tileSize)
+const resolutions = []
+for (let zoom = 0; zoom <= maxZoom; zoom++)
+  resolutions.push(maxResolution / Math.pow(2, zoom))
+
+const crs = new L.Proj.CRS(
+  "EPSG:3575", 
+  "+proj=laea +lat_0=90 +lon_0=10 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs", 
+  { origin
+  , resolutions
+  });
+	    
+const tiles = L.tileLayer('http://tiles.arcticconnect.ca/osm_3575/{z}/{x}/{y}.png',
+                           { maxZoom
+                           , minZoom: 1
+                           , tileSize
+                           , attribution: '<br/>Whatsapp Klaas 0032 474 75 69 30<br/>Projection LAEA EPSG:3575<br/>Map &copy; <a href="https://arcticconnect.ca/">ArcticConnect</a>. Data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'	                    , continuousWorld: true
+		                       })
+
+const map = L.map('map', {crs:crs})
+             .setView([59.9139, 10.7522], 5)
+
+tiles.addTo(map)
+ 
+// const opts = L.Icon.Default.prototype.options;
+// opts.iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-gold.png';
+// opts.iconRetinaUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png';
+// opts.iconSize = opts.iconSize.multiplyBy(0.75);
+// opts.iconAnchor = opts.iconAnchor.multiplyBy(0.75);
+      
+const markers = 
+  [ [51.2406477, 2.9161213, '13/5 14:00', '🇧🇪 Start']
+  , [51.5762520, 3.6173393, '13/5 19:00', '🇳🇱']
+  , [52.0935209, 5.1114410, '14/5 19:50']
+  , [52.2855475, 6.4628477, '15/5 18:45']
+  , [52.6923229, 7.2843355, '16/5 17:30', '🇩🇪']
+  , [53.0881179, 8.8082990, '17/5 21:05']
+  ]
+
+markers.forEach(([lat, lon, dat, msg]) => L.marker([lat, lon]).addTo(map).bindPopup(`<b>${dat}</b>${msg ? ' '+msg : ''}`))
+    </script>
+</body>
+</html>
