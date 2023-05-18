@@ -24,7 +24,6 @@
      integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
      crossorigin=""></script>
     <script>
-           })
 var map = L.map('map').setView([59.9139, 10.7522], 5);
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -46,7 +45,7 @@ var markers =
   , [53.0881179, 8.8082990, '17/5 21:05']
   ];
 
-markers.forEach(([lat, lon, dat, msg]) => L.marker([lat, lon]).addTo(map).bindPopup(`<b>${dat}</b>${msg ? ' '+msg : ''}`));
+markers.forEach(([lat, lon, dat, msg]) => L.marker([lat, lon]).addTo(map).bindPopup(`<b>${dat}</b>${msg ? '<br/>'+msg : ''}`));
     </script>
 </body>
 </html>
