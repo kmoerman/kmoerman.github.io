@@ -64,7 +64,7 @@ var markers =
   , [56.2663373, 12.8370822, '21/5 20:00', '🇸🇪']
   ];
 
-markers.forEach(([lat, lon, dat, msg, pic]) => L.marker([lat, lon]).addTo(map).bindPopup(`<b>${dat}</b>${msg ? '<br/>'+msg : ''}${pic ? `<img src="${pic}" class="embed" />` : ''}`));
+markers.forEach(([lat, lon, dat, msg, pic]) => L.marker([lat, lon]).addTo(map).bindPopup(`<b>${dat}</b>${msg ? '<br/>'+msg : ''}${pic || ''}`));
     </script>
 </body>
 </html>
