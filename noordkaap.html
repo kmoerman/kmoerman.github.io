@@ -16,6 +16,14 @@
             height: 100%;
             width: 100%;
         }
+        
+        img.embed {
+            display: block;
+            width: 10em;
+            padding: 0;
+            border: 0;
+            margin-top: 0.5em;
+        }
     </style>
 </head>
 <body>
@@ -37,7 +45,7 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
 // opts.iconAnchor = opts.iconAnchor.multiplyBy(0.75);
       
 var markers = 
-  [ [51.2406477, 2.9161213, '13/5 14:00', '🇧🇪 Start']
+  [ [51.2406477, 2.9161213, '13/5 14:00', '🇧🇪 Start', 'https://flic.kr/p/2oBVpHw']
   , [51.5762520, 3.6173393, '13/5 19:00', '🇳🇱']
   , [52.0935209, 5.1114410, '14/5 19:50']
   , [52.2855475, 6.4628477, '15/5 18:45']
@@ -49,7 +57,7 @@ var markers =
   , [56.2663373, 12.8370822, '21/5 20:00', '🇸🇪']
   ];
 
-markers.forEach(([lat, lon, dat, msg]) => L.marker([lat, lon]).addTo(map).bindPopup(`<b>${dat}</b>${msg ? '<br/>'+msg : ''}`));
+markers.forEach(([lat, lon, dat, msg, pic]) => L.marker([lat, lon]).addTo(map).bindPopup(`<b>${dat}</b>${msg ? '<br/>'+msg : ''}${pic ? `<img src="${pic}" class="embed" />` : ''}`));
     </script>
 </body>
 </html>
