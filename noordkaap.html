@@ -62,6 +62,7 @@ var markers =
   , [55.6273423, 12.9901649, '19/5 7:00', '🇸🇪']
   , [55.7463435, 12.5873856, '20/5 19:45', '🇩🇰']
   , [56.2663373, 12.8370822, '21/5 20:00', '🇸🇪', '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52915194264/in/datetaken-public"><img src="https://live.staticflickr.com/65535/52915194264_b346a69260_c.jpg" /></a>']
+  , [57.0605297, 12.2744754, '22/5 20:45']
   ];
 
 markers.forEach(([lat, lon, dat, msg, pic]) => L.marker([lat, lon]).addTo(map).bindPopup(`<b>${dat}</b>${msg ? '<br/>'+msg : ''}${pic || ''}`));
