@@ -65,6 +65,7 @@ var markers =
   , [57.0605297, 12.2744754, '22/5 20:45']
   , [57.7900683, 11.8339524, '23/5 21:30', undefined, '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52919963552/in/datetaken-public/"><img src="https://live.staticflickr.com/65535/52919963552_1015bd1960_c.jpg" /></a>']
   , [58.8468393, 11.5457702, '24/5 23:20', undefined, '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52924580969/in/datetaken-public/"><img src="https://live.staticflickr.com/65535/52924580969_87db42b008_c.jpg" /></a>']
+  , [59.8987718, 10.7731690, '25/5 21:15']
   ];
 
 markers.forEach(([lat, lon, dat, msg, pic]) => L.marker([lat, lon]).addTo(map).bindPopup(`<b>${dat}</b>${msg ? '<br/>'+msg : ''}${pic || ''}`));
