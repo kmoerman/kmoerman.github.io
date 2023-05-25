@@ -52,20 +52,20 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
 // opts.iconAnchor = opts.iconAnchor.multiplyBy(0.75);
       
 var markers = 
-  [ [51.2406477, 2.9161213, '13/5 14:00', '🇧🇪 Start', '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52915039516/in/datetaken-public"><img src="https://live.staticflickr.com/65535/52915039516_a66e7b38e7_c.jpg" /></a>']
-  , [51.5762520, 3.6173393, '13/5 19:00', '🇳🇱']
-  , [52.0935209, 5.1114410, '14/5 19:50', 0, '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52915194169/in/datetaken-public"><img src="https://live.staticflickr.com/65535/52915194169_0bf78ca542_c.jpg" /></a>']
-  , [52.2855475, 6.4628477, '15/5 18:45']
-  , [52.6923229, 7.2843355, '16/5 17:30', '🇩🇪']
-  , [53.0881179, 8.8082990, '17/5 21:05']
-  , [53.9402006, 10.8567684, '18/5 20:55']
-  , [55.6273423, 12.9901649, '19/5 7:00', '🇸🇪']
-  , [55.7463435, 12.5873856, '20/5 19:45', '🇩🇰']
-  , [56.2663373, 12.8370822, '21/5 20:00', '🇸🇪', '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52915194264/in/datetaken-public"><img src="https://live.staticflickr.com/65535/52915194264_b346a69260_c.jpg" /></a>']
-  , [57.0605297, 12.2744754, '22/5 20:45']
-  , [57.7900683, 11.8339524, '23/5 21:30', undefined, '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52919963552/in/datetaken-public/"><img src="https://live.staticflickr.com/65535/52919963552_1015bd1960_c.jpg" /></a>']
-  , [58.8468393, 11.5457702, '24/5 23:20', undefined, '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52924580969/in/datetaken-public/"><img src="https://live.staticflickr.com/65535/52924580969_87db42b008_c.jpg" /></a>']
-  , [59.8987718, 10.7731690, '25/5 21:15']
+  [ [51.2406477, 2.9161213, 'za 13/5 14:00', '🇧🇪 Start', '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52915039516/in/datetaken-public"><img src="https://live.staticflickr.com/65535/52915039516_a66e7b38e7_c.jpg" /></a>']
+  , [51.5762520, 3.6173393, 'za 13/5 19:00', '🇳🇱']
+  , [52.0935209, 5.1114410, 'zo 14/5 19:50', 0, '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52915194169/in/datetaken-public"><img src="https://live.staticflickr.com/65535/52915194169_0bf78ca542_c.jpg" /></a>']
+  , [52.2855475, 6.4628477, 'ma 15/5 18:45']
+  , [52.6923229, 7.2843355, 'di 16/5 17:30', '🇩🇪']
+  , [53.0881179, 8.8082990, 'wo 17/5 21:05']
+  , [53.9402006, 10.8567684, 'do 18/5 20:55']
+  , [55.6273423, 12.9901649, 'vr 19/5 7:00', '🇸🇪']
+  , [55.7463435, 12.5873856, 'za 20/5 19:45', '🇩🇰']
+  , [56.2663373, 12.8370822, 'zo 21/5 20:00', '🇸🇪', '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52915194264/in/datetaken-public"><img src="https://live.staticflickr.com/65535/52915194264_b346a69260_c.jpg" /></a>']
+  , [57.0605297, 12.2744754, 'ma 22/5 20:45']
+  , [57.7900683, 11.8339524, 'di 23/5 21:30', undefined, '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52919963552/in/datetaken-public/"><img src="https://live.staticflickr.com/65535/52919963552_1015bd1960_c.jpg" /></a>']
+  , [58.8468393, 11.5457702, 'wo 24/5 23:20', undefined, '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52924580969/in/datetaken-public/"><img src="https://live.staticflickr.com/65535/52924580969_87db42b008_c.jpg" /></a>']
+  , [59.8987718, 10.7731690, 'do 25/5 21:15']
   ];
 
 markers.forEach(([lat, lon, dat, msg, pic]) => L.marker([lat, lon]).addTo(map).bindPopup(`<b>${dat}</b>${msg ? '<br/>'+msg : ''}${pic || ''}`));
