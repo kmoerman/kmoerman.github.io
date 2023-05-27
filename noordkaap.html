@@ -52,11 +52,8 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
 // opts.iconAnchor = opts.iconAnchor.multiplyBy(0.75);
 
 function flickr (embed) {
-  if (!embed)
-    return '';
-   
-  var img = (flickr.rgx_img.match(embed) || [])[1];
-  var lnk = (flickr.rgx_lnk.match(embed) || [])[1];
+  var img = (flickr.rgx_img.exec(embed || '') || [])[1];
+  var lnk = (flickr.rgx_lnk.exec(embed || '') || [])[1];
 
   if (!lnk || !img)
     return '';
