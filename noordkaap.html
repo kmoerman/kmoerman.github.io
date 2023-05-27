@@ -50,7 +50,22 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
 // opts.iconRetinaUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png';
 // opts.iconSize = opts.iconSize.multiplyBy(0.75);
 // opts.iconAnchor = opts.iconAnchor.multiplyBy(0.75);
-      
+
+function flickr (embed) {
+  if (!embed)
+    return '';
+   
+  var img = (flickr.rgx_img.match(embed) || [])[1];
+  var lnk = (flickr.rgx_lnk.match(embed) || [])[1];
+
+  if (!lnk || !img)
+    return '';
+
+  return `<a class="flickr" href="${lnk}"><img src="${img}" /></a>`;
+}
+flickr.rgx_img = /<img src="([^"]+)/
+flickr.rgx_lnk = /href="([^"]+)/
+
 var markers = 
   [ [51.2406477, 2.9161213, 'za 13/5 14:00', '🇧🇪 Start', '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52915039516/in/datetaken-public"><img src="https://live.staticflickr.com/65535/52915039516_a66e7b38e7_c.jpg" /></a>']
   , [51.5762520, 3.6173393, 'za 13/5 19:00', '🇳🇱']
@@ -65,10 +80,11 @@ var markers =
   , [57.0605297, 12.2744754, 'ma 22/5 20:45']
   , [57.7900683, 11.8339524, 'di 23/5 21:30', undefined, '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52919963552/in/datetaken-public/"><img src="https://live.staticflickr.com/65535/52919963552_1015bd1960_c.jpg" /></a>']
   , [58.8468393, 11.5457702, 'wo 24/5 23:20', undefined, '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52924580969/in/datetaken-public/"><img src="https://live.staticflickr.com/65535/52924580969_87db42b008_c.jpg" /></a>']
-  , [59.8987718, 10.7731690, 'do 25/5 21:15']
+  , [59.8987718, 10.7731690, 'do 25/5 21:15<br/>vr 26/5', '🇳🇴', '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52930064626/in/datetaken-public/"><img src="https://live.staticflickr.com/65535/52930064626_f83d37b5e7_c.jpg" /></a>']
+  , [60.0447897, 10.3841833, 'za 27/5 20:10', undefined, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52930446575/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52930446575_5d6d338b8e_c.jpg" width="481" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>']
   ];
 
-markers.forEach(([lat, lon, dat, msg, pic]) => L.marker([lat, lon]).addTo(map).bindPopup(`<b>${dat}</b>${msg ? '<br/>'+msg : ''}${pic || ''}`));
+markers.forEach(([lat, lon, dat, msg, pic]) => L.marker([lat, lon]).addTo(map).bindPopup(`<b>${dat}</b>${msg ? '<br/>'+msg : ''}${flickr(pic)}`));
     </script>
 </body>
 </html>
