@@ -37,8 +37,8 @@
             width: 8px;
             height: 8px;
             border: 2px solid #ed64d2;
-            border-radius: 4px;
-            margin: 0;
+            border-radius: 8px;
+            margin: -4px 0 0 -4px;
             padding: 0;
             background: #fff;
             opacity: 0.8;
@@ -70,7 +70,7 @@ function flickr (embed) {
 flickr.rgx_img = /<img src="([^"]+)/;
 flickr.rgx_lnk = /href="([^"]+)/;
 
-const camp = L.divIcon({className: 'point-camp', iconSize: [8,8], popupAnchor: [4,0]})
+const camp = L.divIcon({className: 'point-camp'})
 
 function marker (lat, lon, icon, dat, msg, pic) {
   const m = new L.marker ([lat, lon], {icon});
