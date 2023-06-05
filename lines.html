@@ -73,7 +73,7 @@ function flickr (embed) {
 flickr.rgx_img = /<img src="([^"]+)/;
 flickr.rgx_lnk = /href="([^"]+)/;
 
-const camp = L.divIcon({className: 'point-camp'})
+const camp = L.divIcon({className: 'point-camp', iconSize: [12,12]})
 
 function marker (lat, lon, icon, dat, msg, pic) {
   const m = new L.marker ([lat, lon], {icon});
