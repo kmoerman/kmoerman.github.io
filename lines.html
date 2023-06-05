@@ -34,8 +34,8 @@
         
         div.point-camp {
             display: block;
-            width: 8px;
-            height: 8px;
+            width: 9px;
+            height: 9px;
             border: 2px solid #ed64d2;
             border-radius: 50%;
             padding: 0;
@@ -74,7 +74,7 @@ function flickr (embed) {
 flickr.rgx_img = /<img src="([^"]+)/;
 flickr.rgx_lnk = /href="([^"]+)/;
 
-const camp = L.divIcon({className: 'point-camp', iconSize: [8,8]})
+const camp = L.divIcon({className: 'point-camp', iconSize: [9,9]})
 
 function marker (lat, lon, icon, dat, msg, pic) {
   const m = new L.marker ([lat, lon], {icon});
@@ -107,6 +107,10 @@ const markers =
   , [62.0953492,  7.2189268, camp, 'wo 31/5 23:20<br/>do 1/6', undefined, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52940740767/in/datetaken-public" title="Untitled"><img src="https://live.staticflickr.com/65535/52940740767_f69ce5bd4e_c.jpg" width="800" height="366" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"']
   , [62.7377522,  7.4521446, camp, 'vr 2/6 24:30', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52947631310/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52947631310_e9a492fe91_c.jpg" width="600" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"']
   , [63.2703583,  8.4956540, camp, 'za 3/6 21:00', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52947241086/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52947241086_f7587e9aab_c.jpg" width="600" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"']
+  , [63.4329740, 10.3725049, camp, 'zo 4/6 20:30', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52952847086/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52952847086_f91ec27d4b_c.jpg" width="800" height="600" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8']
+  , [63.5871109, 10.4224705, camp, 'ma 5/6 20:15']
+  ];
+  
   ];
       
 const points = markers.map(m => m.slice(0,2))
