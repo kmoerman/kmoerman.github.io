@@ -116,7 +116,7 @@ const markers =
 const points = markers.map(m => m.slice(0,2))
 const journey = new L.Polyline (points, {color: '#ed64d2', opacity: 0.8})
                         .addTo(map);
-const arctic = new L.Polyline([[66.56375,12.9630773],[66.56375,13.0233235]], {color: '#f7ff66', opacity: 0.9})
+const arctic = new L.Polyline([[66.56375,13.1427192],[66.56375,13.2085666]], {color: '#ed64d2', opacity: 0.9, weight: 1, dashArray: '3 1'})
                        .addTo(map)
 markers.forEach(m => m.length > 2 && marker(...m).addTo(map));
     </script>
