@@ -127,6 +127,9 @@ const arctic = new L.Polyline([[lat, lon-delta],[lat,lon+delta]], {color: '#ed64
         
         
 markers.forEach(m => m.length > 2 && marker(...m).addTo(map));
+
+L.control.scale().addTo(map);
+    
     </script>
 </body>
 </html>
