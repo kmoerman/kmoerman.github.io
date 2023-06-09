@@ -74,7 +74,59 @@ function flickr (embed) {
 flickr.rgx_img = /<img src="([^"]+)/;
 flickr.rgx_lnk = /href="([^"]+)/;
 
-const camp = L.divIcon({className: 'point-camp', iconSize: [9,9]})
+const circle = L.divIcon({className: 'point-camp', iconSize: [9,9]})
+const camp   = circle
+
+function track () {
+  this.markers = []
+  this.lines   = new lines ()
+}
+
+track.prototype.bike = function (lat,lon,...rest) {
+  this.markers.push(marker(lat,lon,circle,...rest))
+  this.lines.line(lat,lon)
+  return this
+}
+
+track.prototype.boat = function (lat,lon,...rest) {
+  this.markers.push(marker(lat,lon,circle,...rest))
+  this.lines.dots(lat,lon)
+  return this
+}
+
+track.prototype.addTo = function (map) {
+  this.markers.forEach(m => m.addTo(map))
+  this.lines.addTo(map)
+  return this
+}
+
+function lines () {
+  this.segments = lines.$type.map(() => [])
+  this.last     = {typ:-1}
+}
+
+lines.style =
+  { line: {color: Pink, weight:3, opacity: 0.8}
+  , dots: {color: Pink, weight:3, opacity: 0.9, dashArray: '0 4'}
+  }
+
+lines.$type = Object.entries(lines.style)
+
+lines.$type.forEach((nam,typ) => 
+  lines.prototype[nam] = function (lat, lon) {
+    if (this.last.typ !== typ && this.last.typ >= 0)
+      this.segments[typ].push([[this.last.lat, this.last.lon]])
+    
+    this.segments[typ].at(-1).push([lat,lon])
+    this.last = {typ,lat,lon}
+  })
+
+lines.prototype.addTo = function (map) {
+  lines.$type.forEach((typ, style) =>
+    this.segments[typ]
+        .forEach(pss => pss.length > 0 && pss.forEach(ps =>
+           new L.Polyline (ps, style).addTo(map))))
+}
 
 function marker (lat, lon, icon, dat, msg, pic) {
   const m = new L.marker ([lat, lon], {icon});
