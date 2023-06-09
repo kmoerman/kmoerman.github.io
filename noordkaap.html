@@ -101,7 +101,8 @@ track.prototype.addTo = function (map) {
 }
 
 function lines () {
-  this.segments = lines.$type.map(() => [])
+  this.segments = []
+  this.points   = []
   this.last     = {typ:-1}
 }
 
@@ -111,22 +112,19 @@ lines.style =
   , dots: {color: Pink, weight:3, opacity: 0.9, dashArray: '0 4'}
   }
 
-lines.$type = Object.entries(lines.style)
-
-lines.$type.forEach((nam,typ) => 
-  lines.prototype[nam] = function (lat, lon) {
-    if (this.last.typ !== typ && this.last.typ >= 0)
-      this.segments[typ].push([[this.last.lat, this.last.lon]])
+Object.entries(lines.style).forEach(([name, style], typ) => 
+  lines.prototype[name] = function (lat, lon) {
+    if (this.last.typ !== typ && this.last.typ >= 0) {
+      this.segments.push(new L.Polyline (this.points, style))
+      this.points = [[this.last.lat, this.last.lon]]
+    }
     
-    this.segments[typ].at(-1).push([lat,lon])
+    this.points.push([lat,lon])
     this.last = {typ,lat,lon}
   })
 
 lines.prototype.addTo = function (map) {
-  lines.$type.forEach((typ, style) =>
-    this.segments[typ]
-        .forEach(pss => pss.length > 0 && pss.forEach(ps =>
-           new L.Polyline (ps, style).addTo(map))))
+  this.segments.forEach(pl => pl.addTo(map))
 }
 
 function marker (lat, lon, icon, dat, msg, pic) {
