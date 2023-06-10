@@ -177,7 +177,7 @@ const arctic = new L.Polyline([[lat, lon-delta],[lat,lon+delta]], {color: Pink, 
                        .addTo(map);
 
 markers.reduce((t, [lat, lon, icon, ...rest]) => t.bike(lat, lon, ...rest), new track ())
-       .adddTo(map)
+       .addTo(map)
 
 // markers.forEach(m => m.length > 2 && marker(...m).addTo(map));
 
