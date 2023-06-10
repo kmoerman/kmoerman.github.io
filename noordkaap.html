@@ -125,7 +125,7 @@ Object.entries(lines.style).forEach(([name, style]) =>
 
 lines.prototype.addTo = function (map) {
   if (this.last.name !== undefined)
-    this.segments.push(new L.polyline (this.points, lines.style[this.last.name])
+    this.segments.push(new L.Polyline (this.points, lines.style[this.last.name])
   
   this.segments.forEach(pl => pl.addTo(map))
 }
