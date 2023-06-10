@@ -114,7 +114,7 @@ lines.style =
 
 Object.entries(lines.style).forEach(([name, style]) => 
   lines.prototype[name] = function (lat, lon) {
-    if (this.last.name !== typ && this.last.name !== undefined) {
+    if (this.last.name !== name && this.last.name !== undefined) {
       this.segments.push(new L.Polyline (this.points, style))
       this.points = [[this.last.lat, this.last.lon]]
     }
