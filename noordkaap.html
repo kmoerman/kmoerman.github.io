@@ -138,8 +138,10 @@ function marker (lat, lon, icon, dat, msg, pic) {
   m.bindPopup(`<b>${dat.replace(/\s..:../g, '')}</b>${msg ? '<br/>'+msg : ''}${flickr(pic)}`);
   return m;
 }
-        
-const markers = 
+
+const T = new track ()
+
+const markers1 =
   [ [51.2406477,  2.9161213, camp, 'za 13/5 14:00', '🇧🇪 Start', '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52915039516/in/datetaken-public"><img src="https://live.staticflickr.com/65535/52915039516_a66e7b38e7_c.jpg" /></a>']
   , [51.5762520,  3.6173393, camp, 'za 13/5 19:00', '🇳🇱']
   , [52.0935209,  5.1114410, camp, 'zo 14/5 19:50', 0, '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52915194169/in/datetaken-public"><img src="https://live.staticflickr.com/65535/52915194169_0bf78ca542_c.jpg" /></a>']
@@ -147,8 +149,13 @@ const markers =
   , [52.6923229,  7.2843355, camp, 'di 16/5 17:30', '🇩🇪']
   , [53.0881179,  8.8082990, camp, 'wo 17/5 21:05']
   , [53.9402006, 10.8567684, camp, 'do 18/5 20:55']
-  , [55.6273423, 12.9901649, camp, 'vr 19/5 07:00', '🇸🇪']
-  , [55.7463435, 12.5873856, camp, 'za 20/5 19:45', '🇩🇰']
+  ]
+
+markers1.reduce((t,[lat,lon,,...rest]) => t.bike(lat, lon, ...rest), T)
+T.boat(55.6273423, 12.9901649, 'vr 19/5 07:00', '🇸🇪'])
+
+const markers2 =
+  [ [55.7463435, 12.5873856, camp, 'za 20/5 19:45', '🇩🇰']
   , [56.2663373, 12.8370822, camp, 'zo 21/5 20:00', '🇸🇪', '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52915194264/in/datetaken-public"><img src="https://live.staticflickr.com/65535/52915194264_b346a69260_c.jpg" /></a>']
   , [57.0605297, 12.2744754, camp, 'ma 22/5 20:45']
   , [57.7900683, 11.8339524, camp, 'di 23/5 21:30', undefined, '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52919963552/in/datetaken-public/"><img src="https://live.staticflickr.com/65535/52919963552_1015bd1960_c.jpg" /></a>']
@@ -169,6 +176,10 @@ const markers =
   , [66.7438443, 13.5594980, camp, 'vr 9/6 22:30', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52963174638/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52963174638_d0d0fba288_c.jpg" width="729" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">']
   ];
 
+markers2.reduce((t, [lat, lon,,...rest]) => t.bike(lat, lon, ...rest), T)
+
+T.addTo(map);
+
 // const points = markers.map(m => m.slice(0,2))
 // const journey = new L.Polyline (points, lines.style.line)
 //                        .addTo(map);
@@ -179,8 +190,8 @@ const delta = 0.5
 const arctic = new L.Polyline([[lat, lon-delta],[lat,lon+delta]], {color: Pink, opacity: 0.9, weight: 1, dashArray: '8 4'})
                        .addTo(map);
 
-markers.reduce((t, [lat, lon, icon, ...rest]) => t.bike(lat, lon, ...rest), new track ())
-       .addTo(map)
+//markers.reduce((t, [lat, lon, icon, ...rest]) => t.bike(lat, lon, ...rest), new track ())
+//      .addTo(map)
 
 // markers.forEach(m => m.length > 2 && marker(...m).addTo(map));
 
