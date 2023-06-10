@@ -114,19 +114,20 @@ lines.style =
 
 Object.entries(lines.style).forEach(([name, style]) => 
   lines.prototype[name] = function (lat, lon) {
-    if (this.last.name !== name && this.last.name !== undefined) {
-      this.segments.push(new L.Polyline (this.points, style))
-      this.points = [[this.last.lat, this.last.lon]]
+    if (this.last === undefined)
+      this.segments.push(new L.Polyline ([[lat, lon]], style))
+    
+    else {
+      this.segments.at(-1).addLatLng([lat, lon])
+
+      if (this.last !== name)
+        this.segments.push(new L.Polyline ([[lat,lon]], style))
     }
     
-    this.points.push([lat,lon])
-    this.last = {name,lat,lon}
+    this.last = name
   })
 
 lines.prototype.addTo = function (map) {
-  if (this.last.name !== undefined)
-    this.segments.push(new L.Polyline (this.points, lines.style[this.last.name]))
-  
   this.segments.forEach(pl => pl.addTo(map))
 }
 
