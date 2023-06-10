@@ -103,7 +103,7 @@ track.prototype.addTo = function (map) {
 function lines () {
   this.segments = []
   this.points   = []
-  this.last     = undefined
+  this.last     = {}
 }
 
 const Pink = '#ed64d2'
@@ -117,14 +117,12 @@ Object.entries(lines.style).forEach(([name, style]) =>
     if (this.last === undefined)
       this.segments.push(new L.Polyline ([[lat, lon]], style))
     
-    else {
-      this.segments.at(-1).addLatLng([lat, lon])
-
-      if (this.last !== name)
-        this.segments.push(new L.Polyline ([[lat,lon]], style))
-    }
+    else if (this.last.name !== name)
+      this.segments.push(new L.Polyline ([[this.last.lat,this.last.lon]], style))
     
-    this.last = name
+    this.segments.at(-1).addLatLng([lat,lon])
+    
+    this.last = {name,lat,lon}
   })
 
 lines.prototype.addTo = function (map) {
