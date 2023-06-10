@@ -166,19 +166,20 @@ const markers =
   , [66.7438443, 13.5594980, camp, 'vr 9/6 22:30', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52963174638/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52963174638_d0d0fba288_c.jpg" width="729" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">']
   ];
 
-const points = markers.map(m => m.slice(0,2))
-const journey = new L.Polyline (points, lines.style.line)
-                        .addTo(map);
- 
-        
+// const points = markers.map(m => m.slice(0,2))
+// const journey = new L.Polyline (points, lines.style.line)
+//                        .addTo(map);
+
 const lat = 66.56375
 const lon = 13.37
 const delta = 0.5
 const arctic = new L.Polyline([[lat, lon-delta],[lat,lon+delta]], {color: Pink, opacity: 0.9, weight: 1, dashArray: '8 4'})
                        .addTo(map);
-        
-        
-markers.forEach(m => m.length > 2 && marker(...m).addTo(map));
+
+markers.reduce((t, [lat, lon, icon, ...rest]) => t.bike(lat, lon, ...rest), new track ())
+       .adddTo(map)
+
+// markers.forEach(m => m.length > 2 && marker(...m).addTo(map));
 
 L.control.scale({metric: true, imperial: false}).addTo(map);
     
