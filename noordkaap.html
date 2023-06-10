@@ -94,6 +94,10 @@ track.prototype.boat = function (lat,lon,...rest) {
   return this
 }
 
+track.prototype.legacy = function (...entries) {
+  return entries.reduce((t, [lat,lon,,...rest]) => t.bike(lat,lon,...rest), this)
+}
+
 track.prototype.addTo = function (map) {
   this.markers.forEach(m => m.addTo(map))
   this.lines.addTo(map)
@@ -141,21 +145,18 @@ function marker (lat, lon, icon, dat, msg, pic) {
 
 const T = new track ()
 
-const markers1 =
-  [ [51.2406477,  2.9161213, camp, 'za 13/5 14:00', '🇧🇪 Start', '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52915039516/in/datetaken-public"><img src="https://live.staticflickr.com/65535/52915039516_a66e7b38e7_c.jpg" /></a>']
+T.legacy
+  ( [51.2406477,  2.9161213, camp, 'za 13/5 14:00', '🇧🇪 Start', '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52915039516/in/datetaken-public"><img src="https://live.staticflickr.com/65535/52915039516_a66e7b38e7_c.jpg" /></a>']
   , [51.5762520,  3.6173393, camp, 'za 13/5 19:00', '🇳🇱']
   , [52.0935209,  5.1114410, camp, 'zo 14/5 19:50', 0, '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52915194169/in/datetaken-public"><img src="https://live.staticflickr.com/65535/52915194169_0bf78ca542_c.jpg" /></a>']
   , [52.2855475,  6.4628477, camp, 'ma 15/5 18:45']
   , [52.6923229,  7.2843355, camp, 'di 16/5 17:30', '🇩🇪']
   , [53.0881179,  8.8082990, camp, 'wo 17/5 21:05']
   , [53.9402006, 10.8567684, camp, 'do 18/5 20:55']
-  ]
-
-markers1.reduce((t,[lat,lon,,...rest]) => t.bike(lat, lon, ...rest), T)
-T.boat(55.6273423, 12.9901649, 'vr 19/5 07:00', '🇸🇪')
-
-const markers2 =
-  [ [55.7463435, 12.5873856, camp, 'za 20/5 19:45', '🇩🇰']
+  )
+ .boat(55.6273423, 12.9901649, 'vr 19/5 07:00', '🇸🇪')
+ .legacy
+  ( [55.7463435, 12.5873856, camp, 'za 20/5 19:45', '🇩🇰']
   , [56.2663373, 12.8370822, camp, 'zo 21/5 20:00', '🇸🇪', '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52915194264/in/datetaken-public"><img src="https://live.staticflickr.com/65535/52915194264_b346a69260_c.jpg" /></a>']
   , [57.0605297, 12.2744754, camp, 'ma 22/5 20:45']
   , [57.7900683, 11.8339524, camp, 'di 23/5 21:30', undefined, '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52919963552/in/datetaken-public/"><img src="https://live.staticflickr.com/65535/52919963552_1015bd1960_c.jpg" /></a>']
@@ -173,12 +174,11 @@ const markers2 =
   , [64.1080140, 11.3850700, camp, 'di 6/6 20:30']
   , [64.9844040, 11.7575759, camp, 'wo 7/6 23:30', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52957301422/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52957301422_225ef30db7_c.jpg" width="800" height="600" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8']
   , [65.8956720, 12.5362453, camp, 'do 8/6 21:30', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52962049820/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52962049820_db2c55e715_c.jpg" width="800" height="600" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"']
-  , [66.7438443, 13.5594980, camp, 'vr 9/6 22:30', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52963174638/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52963174638_d0d0fba288_c.jpg" width="729" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">']
-  ];
-
-markers2.reduce((t, [lat, lon,,...rest]) => t.bike(lat, lon, ...rest), T)
-
-T.addTo(map);
+  , [66.7438443, 13.5594980, camp, 'vr 9/6 22:30', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52963174638/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52963174638_d0d0fba288_c.jpg" width="729" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf']
+  )
+ .bike(67.2883011, 14.3941594, 'za 10/6 18:30')
+ .boat(67.8998519, 13.0438754, 'za 10/6 21:30')
+ .addTo(map)
 
 // const points = markers.map(m => m.slice(0,2))
 // const journey = new L.Polyline (points, lines.style.line)
