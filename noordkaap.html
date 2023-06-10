@@ -114,11 +114,12 @@ lines.style =
 
 Object.entries(lines.style).forEach(([name, style]) => 
   lines.prototype[name] = function (lat, lon) {
-    if (this.last.name === undefined)
+    if (this.last.name === undefined) {
       this.segments.push(new L.Polyline ([[lat, lon]], style))
-    
-    else if (this.last.name !== name)
-      this.segments.push(new L.Polyline ([[this.last.lat,this.last.lon]], style))
+    } else {
+      if (this.last.name !== name)
+        this.segments.push(new L.Polyline ([[this.last.lat,this.last.lon]], style))
+    }
     
     this.segments.at(-1).addLatLng([lat,lon])
     
