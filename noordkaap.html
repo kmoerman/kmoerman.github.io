@@ -143,6 +143,7 @@ function marker (lat, lon, icon, dat, msg, pic) {
   return m;
 }
 
+// track
 const T = new track ()
 
 T.legacy
@@ -177,24 +178,18 @@ T.legacy
   , [66.7438443, 13.5594980, camp, 'vr 9/6 22:30', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52963174638/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52963174638_d0d0fba288_c.jpg" width="729" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf']
   )
  .bike(67.2883011, 14.3941594, 'za 10/6 18:30', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52964866503/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52964866503_35ebb3feb2_c.jpg" width="600" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
- .boat(67.8998519, 13.0438754, 'za 10/6 21:30')
+ .boat(67.8998519, 13.0438754, 'za 10/6 22:00')
  .addTo(map)
 
-// const points = markers.map(m => m.slice(0,2))
-// const journey = new L.Polyline (points, lines.style.line)
-//                        .addTo(map);
 
+// arctic circle
 const lat = 66.56375
 const lon = 13.37
 const delta = 0.5
 const arctic = new L.Polyline([[lat, lon-delta],[lat,lon+delta]], {color: Pink, opacity: 0.9, weight: 1, dashArray: '8 4'})
                        .addTo(map);
 
-//markers.reduce((t, [lat, lon, icon, ...rest]) => t.bike(lat, lon, ...rest), new track ())
-//      .addTo(map)
-
-// markers.forEach(m => m.length > 2 && marker(...m).addTo(map));
-
+// scale
 L.control.scale({metric: true, imperial: false}).addTo(map);
     
     </script>
