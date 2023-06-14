@@ -98,7 +98,7 @@ function track () {
   this.lines   = new lines ()
   this.root    = this
 
-  this.partial = Object.assign(Object.create(this), {symbol: point.part, root: this})
+  this.part    = Object.assign(Object.create(this), {symbol: point.part, root: this})
 }
 
 track.prototype.symbol = point.camp
@@ -126,7 +126,7 @@ track.prototype.legacy = function (...entries) {
 track.prototype.addTo = function (map) {
   this.markers.forEach(m => m.addTo(map))
   this.lines.addTo(map)
-  return this.self
+  return this.root
 }
 
 function lines () {
