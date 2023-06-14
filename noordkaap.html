@@ -43,6 +43,18 @@
             opacity: 0.8;
             box-sizing: border-box;
         }
+        
+        div.point-part {
+            display: block;
+            width: 5px;
+            height: 5px;
+            border: 2px solid #ed64d2;
+            border-radius: 50%;
+            padding: 0;
+            background: #ed64d2;
+            opacity: 0.8;
+            box-sizing: border-box;
+        }
     </style>
 </head>
 <body>
@@ -74,24 +86,37 @@ function flickr (embed) {
 flickr.rgx_img = /<img src="([^"]+)/;
 flickr.rgx_lnk = /href="([^"]+)/;
 
-const circle = L.divIcon({className: 'point-camp', iconSize: [9,9]})
-const camp   = circle
+const point =
+  { camp : L.divIcon({className: 'point-camp', iconSize: [9,9]})
+  , part : L.divIcon({className: 'point-part', iconSize: [5,5]})
+  }
+
+const camp   = point.circle
 
 function track () {
   this.markers = []
   this.lines   = new lines ()
+  this.self    = this
+
+  this.partial = Object.assign(Object.create(this), {symbol: point.part, self: this})
+}
+
+track.prototype.symbol = point.camp
+
+track.prototype.mark = function (lat, lon, ...rest) {
+  this.markers.push(marker(lat,lon,this.symbol, ...rest))
 }
 
 track.prototype.bike = function (lat,lon,...rest) {
-  this.markers.push(marker(lat,lon,circle,...rest))
+  this.mark(lat,lon,...rest)
   this.lines.line(lat,lon)
-  return this
+  return this.self
 }
 
 track.prototype.boat = function (lat,lon,...rest) {
-  this.markers.push(marker(lat,lon,circle,...rest))
+  this.mark(lat,lon,...rest)
   this.lines.dots(lat,lon)
-  return this
+  return this.self
 }
 
 track.prototype.legacy = function (...entries) {
@@ -101,7 +126,7 @@ track.prototype.legacy = function (...entries) {
 track.prototype.addTo = function (map) {
   this.markers.forEach(m => m.addTo(map))
   this.lines.addTo(map)
-  return this
+  return this.self
 }
 
 function lines () {
