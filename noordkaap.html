@@ -96,9 +96,9 @@ const camp   = point.circle
 function track () {
   this.markers = []
   this.lines   = new lines ()
-  this.self    = this
+  this.root    = this
 
-  this.partial = Object.assign(Object.create(this), {symbol: point.part, self: this})
+  this.partial = Object.assign(Object.create(this), {symbol: point.part, root: this})
 }
 
 track.prototype.symbol = point.camp
@@ -110,13 +110,13 @@ track.prototype.mark = function (lat, lon, ...rest) {
 track.prototype.bike = function (lat,lon,...rest) {
   this.mark(lat,lon,...rest)
   this.lines.line(lat,lon)
-  return this.self
+  return this.root
 }
 
 track.prototype.boat = function (lat,lon,...rest) {
   this.mark(lat,lon,...rest)
   this.lines.dots(lat,lon)
-  return this.self
+  return this.root
 }
 
 track.prototype.legacy = function (...entries) {
@@ -206,6 +206,8 @@ T.legacy
  .boat(67.8998519, 13.0438754, 'za 10/6 22:00<br/>zo 11/6',0,'<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52963874712/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52963874712_b8455642e6_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
  .bike(68.3233079, 14.2025908, 'ma 12/6 22:00', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52969476407/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52969476407_b6268a1e1f_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8')
  .bike(68.8764104, 15.5666862, 'di 13/6 22:20', '🎂')
+ .part.bike(69.3268050, 16.1335661)
+ .part.boat(69.3633950, 17.0525026)
  .bike(69.6140502, 18.0906804, 'wo 14/6 21:00')
  .addTo(map)
 
