@@ -185,9 +185,9 @@ function marker (lat, lon, icon, dat, msg, pic) {
 // track
 const T = new track ()
 
-T.legacy
-  ( [51.2406477,  2.9161213, camp, 'za 13/5 14:00', '🇧🇪 Start', '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52915039516/in/datetaken-public"><img src="https://live.staticflickr.com/65535/52915039516_a66e7b38e7_c.jpg" /></a>']
-  , [51.5762520,  3.6173393, camp, 'za 13/5 19:00', '🇳🇱']
+T.cape(51.2406477,  2.9161213, 'za 13/5 14:00', '🇧🇪 Start', '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52915039516/in/datetaken-public"><img src="https://live.staticflickr.com/65535/52915039516_a66e7b38e7_c.jpg" /></a>')
+ .legacy
+  ( [51.5762520,  3.6173393, camp, 'za 13/5 19:00', '🇳🇱']
   , [52.0935209,  5.1114410, camp, 'zo 14/5 19:50', 0, '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52915194169/in/datetaken-public"><img src="https://live.staticflickr.com/65535/52915194169_0bf78ca542_c.jpg" /></a>']
   , [52.2855475,  6.4628477, camp, 'ma 15/5 18:45']
   , [52.6923229,  7.2843355, camp, 'di 16/5 17:30', '🇩🇪']
@@ -231,7 +231,7 @@ T.legacy
  .bike(70.0670130, 23.5411856, 'zo 18/6 22:30')
  .bike(70.6384899, 25.3753230, 'ma 19/6 21:30', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52986396867/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52986396867_82f7014767_c.jpg" width="439" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
  .cape.bike(71.1709533, 25.7836599, 'di 20/6 21:00', '🦵🦵', '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52988868132/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52988868132_1e4dd5053a_c.jpg" width="800" height="556" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
- .part.bike(71.1845720, 25.6742579,  'di 21/6 25:30')
+ .part.bike(71.1845720, 25.6742579, 'di 20/6 25:30')
  .part.bike(70.9810860, 25.9685405, 'wo 21/6 06:00')
  .boat(70.6648820, 23.6817711, 'wo 21/6 11:00', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52990545414/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52990545414_f28ef500cc_c.jpg" width="600" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
  .addTo(map)
