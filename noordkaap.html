@@ -111,8 +111,8 @@ function track () {
   this.lines   = new lines ()
   this.root    = this
 
-  this.part    = Object.assign(Object.create(this), {symbol: point.part, root: this})
-  this.cape    = Object.assign(Object.create(this), {symbol: point.cape, root: this})
+  for (const style in point)
+    this[style] = Object.assign(Object.create(this), {symbol: point[style], root: this})
 }
 
 track.prototype.symbol = point.camp
