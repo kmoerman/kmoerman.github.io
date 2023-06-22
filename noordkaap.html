@@ -110,6 +110,7 @@ function track () {
   this.markers = []
   this.lines   = new lines ()
   this.root    = this
+  this.branches = []
 
   for (const style in point)
     this[style] = Object.assign(Object.create(this), {symbol: point[style], root: this})
@@ -119,6 +120,14 @@ track.prototype.symbol = point.camp
 
 track.prototype.mark = function (lat, lon, ...rest) {
   this.markers.push(marker(lat,lon,this.symbol, ...rest))
+}
+
+track.prototype.branch = function (f) {
+  const branch = new track ()
+  branch.lines.last = Object.assign({}, this.lines.last, {name:0})
+  this.branches.push(branch)
+  f(branch)
+  return this.root
 }
 
 track.prototype.bike = function (lat,lon,...rest) {
@@ -140,6 +149,7 @@ track.prototype.legacy = function (...entries) {
 track.prototype.addTo = function (map) {
   this.markers.forEach(m => m.addTo(map))
   this.lines.addTo(map)
+  this.branches.forEach(b => b.addTo(map))
   return this.root
 }
 
