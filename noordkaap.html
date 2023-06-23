@@ -245,8 +245,9 @@ T.cape.bike(51.2406477,  2.9161213, 'za 13/5 14:00', '🇧🇪 Start', '<a class
  .branch(t => t.part.walk(71.1845720, 25.6742579, 'di 20/6 25:30', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52990560394/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52990560394_aa82d6d08d_c.jpg" width="800" height="441" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">'))
  .part.bike(70.9810860, 25.9685405, 'wo 21/6 06:00')
  .boat(70.6648820, 23.6817711, 'wo 21/6 11:00', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52990545414/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52990545414_f28ef500cc_c.jpg" width="600" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
- .part.boat(70.7917866, 23.4138028)
- .bike(70.7905874, 23.3320504, 'do 22/6 20:30')
+ .branch(t => t.part.boat(70.7917866, 23.4138028)
+               .bike(70.7905874, 23.3320504, 'do 22/6 20:30'))
+ .part.boat(70.2385466, 22.3477377)
  .addTo(map)
 
 
