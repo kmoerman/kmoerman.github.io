@@ -102,6 +102,7 @@ const point =
   { camp : L.divIcon({className: 'point-camp', iconSize: [9,9]})
   , part : L.divIcon({className: 'point-part', iconSize: [5,5]})
   , cape : L.divIcon({className: 'point-cape', iconSize: [10,10]})
+  , none : undefined
   }
 
 const camp   = point.circle
@@ -119,7 +120,7 @@ function track () {
 track.prototype.symbol = point.camp
 
 track.prototype.mark = function (lat, lon, ...rest) {
-  this.markers.push(marker(lat,lon,this.symbol, ...rest))
+  this.symbol && this.markers.push(marker(lat,lon,this.symbol, ...rest))
 }
 
 track.prototype.branch = function (f) {
