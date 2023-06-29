@@ -230,7 +230,7 @@ function marker (lat, lon, icon, dat, msg, pic) {
 // track
 const T = new track ()
 
-T//.northbound()
+T.northbound()
  .cape.bike(51.2406477,  2.9161213, 'za 13/5 14:00', '🇧🇪 Start', '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52915039516/in/datetaken-public"><img src="https://live.staticflickr.com/65535/52915039516_a66e7b38e7_c.jpg" /></a>')
  .legacy
   ( [51.5762520,  3.6173393, camp, 'za 13/5 19:00', '🇳🇱']
@@ -278,7 +278,7 @@ T//.northbound()
  .bike(70.6384899, 25.3753230, 'ma 19/6 21:30', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52986396867/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52986396867_82f7014767_c.jpg" width="439" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
  .cape.bike(71.1709533, 25.7836599, 'di 20/6 21:00', '🦵🦵', '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52991019960/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52991019960_db66dcc661_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
  .branch(t => t.part.walk(71.1845720, 25.6742579, 'di 20/6 25:30', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52990560394/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52990560394_aa82d6d08d_c.jpg" width="800" height="441" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">'))
- //.southbound()
+ .southbound()
  .part.bike(70.9810860, 25.9685405, 'wo 21/6 06:00')
  .boat(70.6648820, 23.6817711, 'wo 21/6 11:00', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52990545414/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52990545414_f28ef500cc_c.jpg" width="600" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
  .branch(t => t.part.boat(70.7917866, 23.4138028)
