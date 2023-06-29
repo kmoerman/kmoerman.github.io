@@ -68,11 +68,11 @@
             box-sizing: border-box;
         }
         
-        div.point.back {
+        div.point.south {
           border-color: #ffee000;
         }
         
-        div.point.back.part {
+        div.point.south.part {
           background-color: #ffee00;
         }
     </style>
@@ -169,10 +169,21 @@ function lines () {
   this.last     = {}
 }
 
-const Pink = '#ed64d2'
+
+const Pink   = '#ed64d2'
+const Yellow = '#ffe000'
+
+const colors =
+  { north: Pink
+  , south: Yellow
+  }
+
+
 lines.style =
   { line: {color: Pink, weight:3, opacity: 0.8}
   , dots: {color: Pink, weight:3, opacity: 0.9, dashArray: '0 4'}
+//  , dotsP:{color: Pink, weight:3, opacity: 0.9, dashArray: '0 8'}
+//  , dotsY:{color: Pink, weight:3, opacity: 0.9, dashArray: '0 8'}
   }
 
 Object.entries(lines.style).forEach(([name, style]) => 
