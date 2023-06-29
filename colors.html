@@ -150,13 +150,13 @@ track.prototype.branch = function (f) {
 track.prototype.walk =
 track.prototype.bike = function (lat,lon,...rest) {
   this.mark(lat,lon,...rest)
-  this.lines.line(lat,lon, this.style.color)
+  this.lines.line(lat,lon)
   return this.root
 }
 
 track.prototype.boat = function (lat,lon,...rest) {
   this.mark(lat,lon,...rest)
-  this.lines.dots(lat,lon, this.style.color)
+  this.lines.dots(lat,lon)
   return this.root
 }
 
