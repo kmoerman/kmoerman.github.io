@@ -127,6 +127,7 @@ function track () {
   this.markers = []
   this.root    = this
   this.branches= []
+
   this.style   = style.north
   this.lines   = new lines (this.style.color)
 
@@ -173,11 +174,11 @@ track.prototype.addTo = function (map) {
 }
 
 track.prototype.northbound = function () {
-  return Object.assign(new track (), this, {lines: lines.restyle(style.north.color)})
+  return Object.assign(new track (), this, {style: style.north, lines: this.lines.restyle(style.north.color)})
 }
 
 track.prototype.southbound = function () {
-  return Object.assign(new track (), this, {lines: lines.restyle(style.south.color)})
+  return Object.assign(new track (), this, {style: style.south, lines: this.lines.restyle(style.south.color)})
 }
 
 function lines (color) {
