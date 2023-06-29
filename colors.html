@@ -132,7 +132,7 @@ function track (style=Style.north) {
 track.prototype.symbol = point.camp
 
 track.prototype.mark = function (lat, lon, ...rest) {
-  this.symbol && this.markers.push(this.marker(lat,lon,this.symbol, ...rest))
+  this.symbol && this.markers.push(this.marker(lat,lon, ...rest))
 }
 
 track.prototype.branch = function (f) {
@@ -217,8 +217,8 @@ lines.prototype.addTo = function (map) {
   this.segments.forEach(pl => pl.addTo(map))
 }
 
-track.prototype.marker = function (lat, lon, icon, dat, msg, pic) {
-  icon = Object.assign(Object.create(Object.getPrototypeOf(icon)), icon)
+track.prototype.marker = function (lat, lon, dat, msg, pic) {
+  const icon = Object.assign(Object.create(Object.getPrototypeOf(this.symbol)), this.symbol)
   icon.className = [icon.className, ...this.style.classes].join(' ')
   const m = new L.marker ([lat, lon], {icon});
   if (arguments.length <= 3)
