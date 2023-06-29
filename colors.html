@@ -73,7 +73,7 @@
         }
         
         div.point.south.part {
-          background-color: #ffee00;
+          background: #ffee00;
         }
     </style>
 </head>
@@ -123,13 +123,13 @@ const Style =
   , south: { classes: ['south'], color: Yellow }
   }
 
-function track () {
+function track (style=Style.north) {
   this.markers = []
   this.root    = this
   this.branches= []
 
-  this.style   = Style.north
-  this.lines   = new lines (this.style.color)
+  this.style   = style
+  this.lines   = new lines (style.color)
 
   for (const t in point)
     this[t] = Object.assign(Object.create(this), {symbol: point[t], root: this})
@@ -142,7 +142,7 @@ track.prototype.mark = function (lat, lon, ...rest) {
 }
 
 track.prototype.branch = function (f) {
-  const branch = new track ()
+  const branch = new track (this.style)
   branch.lines.last = Object.assign({}, this.lines.last, {name:0})
   this.branches.push(branch)
   f(branch)
@@ -174,16 +174,15 @@ track.prototype.addTo = function (map) {
 }
 
 track.prototype.northbound = function () {
-  return Object.assign(new track (), this, {style: Style.north, lines: this.lines.restyle(Style.north.color)})
+  return Object.assign(new track (Style.north), this, {style: Style.north, lines: this.lines.restyle(Style.north.color)})
 }
 
 track.prototype.southbound = function () {
-  return Object.assign(new track (), this, {style: Style.south, lines: this.lines.restyle(Style.south.color)})
+  return Object.assign(new track (Style.south), this, {style: Style.south, lines: this.lines.restyle(Style.south.color)})
 }
 
 function lines (color) {
   this.segments = []
-  //this.points   = []
   this.last     = {}
   this.style    = {color}
 }
@@ -215,7 +214,6 @@ lines.prototype.restyle = function (color) {
   that.segments = this.segments
   that.last.name = 0
   return that
-  //return Object.assign(new lines (color), this, {style:{color}})
 }
 
 lines.prototype.addTo = function (map) {
