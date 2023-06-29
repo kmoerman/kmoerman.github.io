@@ -183,7 +183,7 @@ track.prototype.southbound = function () {
 
 function lines (color) {
   this.segments = []
-  this.points   = []
+  //this.points   = []
   this.last     = {}
   this.style    = {color}
 }
@@ -211,7 +211,11 @@ Object.entries(lines.style).forEach(([name, style]) =>
   })
 
 lines.prototype.restyle = function (color) {
-  return Object.assign(new lines (color), this, {style:{color}})
+  const that = new lines (color)
+  that.segments = this.segments
+  that.last.name = 0
+  return that
+  //return Object.assign(new lines (color), this, {style:{color}})
 }
 
 lines.prototype.addTo = function (map) {
