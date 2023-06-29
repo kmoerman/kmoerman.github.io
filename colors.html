@@ -215,7 +215,8 @@ Object.entries(lines.style).forEach(([name, style]) =>
 lines.prototype.restyle = function (color) {
   const that = new lines (color)
   that.segments = this.segments
-  that.last.name = 0
+  that.last = this.last
+  if (this.last.name) that.last.name = 0
   return that
 }
 
