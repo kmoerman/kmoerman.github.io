@@ -113,7 +113,7 @@ const point =
   , none : undefined
   }
 
-const camp = point.circle
+const camp = undefined
 
 const Pink   = '#ed64d2'
 const Yellow = '#ffe000'
@@ -133,7 +133,7 @@ function track (style=Style.north) {
   this.lines   = new lines (style.color)
 
   for (const t in point)
-    this[t] = Object.assign(Object.create(this), {symbol: point[t], root: this})
+    this[t] = Object.assign(Object.create(this), {symbol: point[t]})
 }
 
 track.prototype.symbol = point.camp
