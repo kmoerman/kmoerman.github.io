@@ -85,7 +85,7 @@
     <script>
 
 function mix (e) {
-  document.querySelectorAll('.point-camp').forEach(n => n.setAttribute('style', `mix-blend-mode: ${e.target.value};`))
+  document.querySelectorAll('.point').forEach(n => n.setAttribute('style', `mix-blend-mode: ${e.target.value};`))
 } 
         
 const map = L.map('map').setView([59.9139, 10.7522], 5);
@@ -173,13 +173,15 @@ track.prototype.addTo = function (map) {
   return this.root
 }
 
-track.prototype.northbound = function () {
-  return Object.assign(new track (Style.north), this, {style: Style.north, lines: this.lines.restyle(Style.north.color)})
-}
+Object.entries(Style).forEach(([name,style]) =>
+track.prototype[`${name}bound`] = function () {
+  const that = new track (style)
+  that.lines = this.lines.restyle(that.style.color)
+  that.markers  = this.markers
+  that.branches = this.branches
+  return that
+})
 
-track.prototype.southbound = function () {
-  return Object.assign(new track (Style.south), this, {style: Style.south, lines: this.lines.restyle(Style.south.color)})
-}
 
 function lines (color) {
   this.segments = []
