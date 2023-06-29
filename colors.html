@@ -189,10 +189,10 @@ function lines (color) {
 
 
 lines.style =
-  { line: {color: Pink, weight:3, opacity: 0.8}
-  , dots: {color: Pink, weight:3, opacity: 0.9, dashArray: '0 4'}
-//  , dotsP:{color: Pink, weight:3, opacity: 0.9, dashArray: '0 8'}
-//  , dotsY:{color: Pink, weight:3, opacity: 0.9, dashArray: '0 8'}
+  { line: {weight:3, opacity: 0.8}
+  , dots: {weight:3, opacity: 0.9, dashArray: '0 4'}
+  , dot1: {weight:3, opacity: 0.9, dashArray: '0 8'}
+  , dot2: {weight:3, opacity: 0.9, dashArray: '0 8', dashOffset: '4'}
   }
 
 Object.entries(lines.style).forEach(([name, style]) => 
