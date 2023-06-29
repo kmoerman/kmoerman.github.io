@@ -127,7 +127,8 @@ function track () {
   this.markers = []
   this.root    = this
   this.branches= []
-  this.lines   = new lines (Pink)
+  this.style   = style.north
+  this.lines   = new lines (this.style.color)
 
   for (const typ in point)
     this[typ] = Object.assign(Object.create(this), {symbol: point[typ], root: this})
@@ -208,7 +209,7 @@ Object.entries(lines.style).forEach(([name, style]) =>
     this.last = {name,lat,lon}
   })
 
-lines.restyle = function (color) {
+lines.prototype.restyle = function (color) {
   return Object.assign(new lines (), this, {style:{color}})
 }
 
