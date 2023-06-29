@@ -125,10 +125,9 @@ const camp   = point.circle
 
 function track () {
   this.markers = []
-  this.lines   = new lines ()
   this.root    = this
   this.branches= []
-  this.style   = style.north
+  this.lines   = new lines (Pink)
 
   for (const typ in point)
     this[typ] = Object.assign(Object.create(this), {symbol: point[typ], root: this})
@@ -151,13 +150,13 @@ track.prototype.branch = function (f) {
 track.prototype.walk =
 track.prototype.bike = function (lat,lon,...rest) {
   this.mark(lat,lon,...rest)
-  this.lines.line(lat,lon)
+  this.lines.line(lat,lon, this.style.color)
   return this.root
 }
 
 track.prototype.boat = function (lat,lon,...rest) {
   this.mark(lat,lon,...rest)
-  this.lines.dots(lat,lon)
+  this.lines.dots(lat,lon, this.style.color)
   return this.root
 }
 
@@ -173,23 +172,24 @@ track.prototype.addTo = function (map) {
 }
 
 track.prototype.northbound = function () {
-  return Object.assign(new track (), this, {style: style.north})
+  return Object.assign(new track (), this, {lines: lines.restyle(style.north.color)})
 }
 
 track.prototype.southbound = function () {
-  return Object.assign(new track (), this, {style: style.south})
+  return Object.assign(new track (), this, {lines: lines.restyle(style.south.color)})
 }
 
-function lines () {
+function lines (color) {
   this.segments = []
   this.points   = []
   this.last     = {}
+  this.style    = {color}
 }
 
 
 lines.style =
-  { line: {color: Pink, weight:3, opacity: 0.8}
-  , dots: {color: Pink, weight:3, opacity: 0.9, dashArray: '0 4'}
+  { line: {weight:3, opacity: 0.8}
+  , dots: {weight:3, opacity: 0.9, dashArray: '0 4'}
 //  , dotsP:{color: Pink, weight:3, opacity: 0.9, dashArray: '0 8'}
 //  , dotsY:{color: Pink, weight:3, opacity: 0.9, dashArray: '0 8'}
   }
@@ -197,16 +197,20 @@ lines.style =
 Object.entries(lines.style).forEach(([name, style]) => 
   lines.prototype[name] = function (lat, lon) {
     if (this.last.name === undefined) {
-      this.segments.push(new L.Polyline ([[lat, lon]], style))
+      this.segments.push(new L.Polyline ([[lat, lon]], {...style, this.style}))
     } else {
       if (this.last.name !== name)
-        this.segments.push(new L.Polyline ([[this.last.lat,this.last.lon]], style))
+        this.segments.push(new L.Polyline ([[this.last.lat,this.last.lon]], {...style, this.style}))
     }
     
     this.segments.at(-1).addLatLng([lat,lon])
     
     this.last = {name,lat,lon}
   })
+
+lines.restyle = function (color) {
+  return Object.assign(new lines (), this, {style:{color}})
+}
 
 lines.prototype.addTo = function (map) {
   this.segments.forEach(pl => pl.addTo(map))
