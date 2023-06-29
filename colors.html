@@ -98,11 +98,19 @@ flickr.rgx_img = /<img src="([^"]+)/;
 flickr.rgx_lnk = /href="([^"]+)/;
 
 const point =
+ {north:
   { camp : L.divIcon({className: 'point camp', iconSize: [9,9]})
   , part : L.divIcon({className: 'point part', iconSize: [5,5]})
   , cape : L.divIcon({className: 'point cape', iconSize: [10,10]})
   , none : undefined
   }
+ ,south:
+  { camp : L.divIcon({className: 'point camp south', iconSize: [9,9]})
+  , part : L.divIcon({className: 'point part south', iconSize: [5,5]})
+  , cape : L.divIcon({className: 'point cape', iconSize: [10,10]})
+  , none : undefined
+  }
+ }
 
 const camp = undefined
 
@@ -113,8 +121,8 @@ const Yellow = '#ffe000'
 const Black  = '#000000'
 
 const Style =
-  { north: { classes: ['north'], color: Pink0 }
-  , south: { classes: ['south'], color: Pink1 }
+  { north: { color: Pink0, name: 'north' }
+  , south: { color: Pink1, name: 'south' }
   }
 
 function track (style=Style.north) {
@@ -124,12 +132,11 @@ function track (style=Style.north) {
 
   this.style   = style
   this.lines   = new lines (style.color)
+  this.symbol  = point[this.style.name].camp
 
-  for (const t in point)
+  for (const t in point[this.style.name])
     this[t] = Object.assign(Object.create(this), {symbol: point[t]})
 }
-
-track.prototype.symbol = point.camp
 
 track.prototype.mark = function (lat, lon, ...rest) {
   this.symbol && this.markers.push(this.marker(lat,lon, ...rest))
@@ -218,9 +225,9 @@ lines.prototype.addTo = function (map) {
 }
 
 track.prototype.marker = function (lat, lon, dat, msg, pic) {
-  const icon = Object.assign(Object.create(Object.getPrototypeOf(this.symbol)), this.symbol)
-  icon.className = [icon.className, ...this.style.classes].join(' ')
-  const m = new L.marker ([lat, lon], {icon});
+  //const icon = Object.assign(Object.create(Object.getPrototypeOf(this.symbol)), this.symbol)
+  //icon.className = [icon.className, ...this.style.classes].join(' ')
+  const m = new L.marker ([lat, lon], {icon:this.symbol});
   if (arguments.length <= 3)
     return m;
   
