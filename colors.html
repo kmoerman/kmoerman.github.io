@@ -177,11 +177,11 @@ track.prototype.addTo = function (map) {
 }
 
 track.prototype.northbound = function () {
-  return Object.assign(new track (), this, {style: styles.north})
+  return Object.assign(new track (), this, {style: style.north})
 }
 
 track.prototype.southbound = function () {
-  return Object.assign(new track (), this, {style: styles.south})
+  return Object.assign(new track (), this, {style: style.south})
 }
 
 function lines () {
