@@ -170,9 +170,9 @@ track.prototype.legacy = function (...entries) {
 }
 
 track.prototype.addTo = function (map) {
-  this.markers.forEach(m => m.addTo(map))
   this.lines.addTo(map)
   this.branches.forEach(b => b.addTo(map))
+  this.markers.forEach(m => m.addTo(map))
   return this.root
 }
 
