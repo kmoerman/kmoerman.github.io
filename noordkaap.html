@@ -237,6 +237,15 @@ track.prototype.marker = function (lat, lon, dat, msg, pic) {
   return m;
 }
 
+
+// arctic circle
+const lat = 66.56375
+const lon = 13.37
+const delta = 0.5
+const arctic = new L.Polyline([[lat, lon-delta],[lat,lon+delta]], {color: Pink, opacity: 0.9, weight: 1, dashArray: '8 4'})
+                       .addTo(map);
+
+
 // track
 const T = new track ()
 
@@ -308,13 +317,6 @@ T.northbound()
  .bike(66.4818594, 13.2453959, 'do 29/6 23:45')
  .addTo(map)
 
-
-// arctic circle
-const lat = 66.56375
-const lon = 13.37
-const delta = 0.5
-const arctic = new L.Polyline([[lat, lon-delta],[lat,lon+delta]], {color: Pink, opacity: 0.9, weight: 1, dashArray: '8 4'})
-                       .addTo(map);
 
 // scale
 L.control.scale({metric: true, imperial: false}).addTo(map);
