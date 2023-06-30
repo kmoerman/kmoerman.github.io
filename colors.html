@@ -97,7 +97,7 @@ function flickr (embed) {
 flickr.rgx_img = /<img src="([^"]+)/;
 flickr.rgx_lnk = /href="([^"]+)/;
 
-const point =
+const Point =
  {north:
   { camp : L.divIcon({className: 'point camp', iconSize: [9,9]})
   , part : L.divIcon({className: 'point part', iconSize: [5,5]})
@@ -132,9 +132,11 @@ function track (style=Style.north) {
 
   this.style   = style
   this.lines   = new lines (style.color)
-  this.symbol  = point[this.style.name].camp
 
-  for (const t in point[this.style.name])
+  const point = Point[this.style.name]
+  this.symbol = point.camp
+
+  for (const t in point)
     this[t] = Object.assign(Object.create(this), {symbol: point[t]})
 }
 
