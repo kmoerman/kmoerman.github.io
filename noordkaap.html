@@ -32,48 +32,39 @@
             margin: 0;
         }
         
+        div.point {
+          display: block;
+          border: 2px solid #f084da;
+          border-radius: 50%;
+          padding: 0;
+          opacity: 0.8;
+          box-sizing: border-box;
+        }
+        
         div.point.camp {
-            display: block;
             width: 9px;
             height: 9px;
-            border: 2px solid #ed64d2;
-            border-radius: 50%;
-            padding: 0;
             background: #fff;
-            opacity: 0.8;
-            box-sizing: border-box;
         }
         
         div.point.part {
-            display: block;
             width: 5px;
             height: 5px;
-            border: 2px solid #ed64d2;
-            border-radius: 50%;
-            padding: 0;
-            background: #ed64d2;
-            opacity: 0.8;
-            box-sizing: border-box;
+            background: #f084da;
         }
         
         div.point.cape {
-            display: block;
             width: 10px;
             height: 10px;
-            border: 2px solid #ed64d2;
-            border-radius: 50%;
-            padding: 0;
             background: #ffee00;
-            opacity: 0.8;
-            box-sizing: border-box;
         }
         
         div.point.south {
-          border-color: #ffee000;
+          border-color: #de3abd;
         }
         
         div.point.south.part {
-          background-color: #ffee00;
+          background: #de3abd;
         }
     </style>
 </head>
@@ -85,7 +76,7 @@
     <script>
 
 function mix (e) {
-  document.querySelectorAll('.point-camp').forEach(n => n.setAttribute('style', `mix-blend-mode: ${e.target.value};`))
+  document.querySelectorAll('.point').forEach(n => n.setAttribute('style', `mix-blend-mode: ${e.target.value};`))
 } 
         
 const map = L.map('map').setView([59.9139, 10.7522], 5);
@@ -106,33 +97,55 @@ function flickr (embed) {
 flickr.rgx_img = /<img src="([^"]+)/;
 flickr.rgx_lnk = /href="([^"]+)/;
 
-const point =
+const Point =
+ {north:
   { camp : L.divIcon({className: 'point camp', iconSize: [9,9]})
   , part : L.divIcon({className: 'point part', iconSize: [5,5]})
   , cape : L.divIcon({className: 'point cape', iconSize: [10,10]})
   , none : undefined
   }
+ ,south:
+  { camp : L.divIcon({className: 'point camp south', iconSize: [9,9]})
+  , part : L.divIcon({className: 'point part south', iconSize: [5,5]})
+  , cape : L.divIcon({className: 'point cape', iconSize: [10,10]})
+  , none : undefined
+  }
+ }
 
-const camp   = point.circle
+const camp = undefined
 
-function track () {
+const Pink   = '#ed64d2'
+const Pink0  = '#f084da'
+const Pink1  = '#de3abd'
+const Yellow = '#ffe000'
+const Black  = '#000000'
+
+const Style =
+  { north: { color: Pink0, name: 'north' }
+  , south: { color: Pink1, name: 'south' }
+  }
+
+function track (style=Style.north) {
   this.markers = []
-  this.lines   = new lines ()
   this.root    = this
-  this.branches = []
+  this.branches= []
 
-  for (const style in point)
-    this[style] = Object.assign(Object.create(this), {symbol: point[style], root: this})
+  this.style   = style
+  this.lines   = new lines (style.color)
+
+  const point = Point[this.style.name]
+  this.symbol = point.camp
+
+  for (const t in point)
+    this[t] = Object.assign(Object.create(this), {symbol: point[t]})
 }
 
-track.prototype.symbol = point.camp
-
 track.prototype.mark = function (lat, lon, ...rest) {
-  this.symbol && this.markers.push(marker(lat,lon,this.symbol, ...rest))
+  this.symbol && this.markers.push(this.marker(lat,lon, ...rest))
 }
 
 track.prototype.branch = function (f) {
-  const branch = new track ()
+  const branch = new track (this.style)
   branch.lines.last = Object.assign({}, this.lines.last, {name:0})
   this.branches.push(branch)
   f(branch)
@@ -163,36 +176,37 @@ track.prototype.addTo = function (map) {
   return this.root
 }
 
-function lines () {
+Object.entries(Style).forEach(([name,style]) =>
+track.prototype[`${name}bound`] = function () {
+  const that = new track (style)
+  that.lines = this.lines.restyle(that.style.color)
+  that.markers  = this.markers
+  that.branches = this.branches
+  return that
+})
+
+
+function lines (color) {
   this.segments = []
-  this.points   = []
   this.last     = {}
+  this.style    = {color}
 }
 
 
-const Pink   = '#ed64d2'
-const Yellow = '#ffe000'
-
-const colors =
-  { north: Pink
-  , south: Yellow
-  }
-
-
 lines.style =
-  { line: {color: Pink, weight:3, opacity: 0.8}
-  , dots: {color: Pink, weight:3, opacity: 0.9, dashArray: '0 4'}
-//  , dotsP:{color: Pink, weight:3, opacity: 0.9, dashArray: '0 8'}
-//  , dotsY:{color: Pink, weight:3, opacity: 0.9, dashArray: '0 8'}
+  { line: {color: Black, weight:3, opacity: 0.8}
+  , dots: {color: Black, weight:3, opacity: 0.9, dashArray: '0 4'}
+  , dot1: {weight:3, opacity: 0.9, dashArray: '0 8'}
+  , dot2: {weight:3, opacity: 0.9, dashArray: '0 8', dashOffset: '4'}
   }
 
 Object.entries(lines.style).forEach(([name, style]) => 
   lines.prototype[name] = function (lat, lon) {
     if (this.last.name === undefined) {
-      this.segments.push(new L.Polyline ([[lat, lon]], style))
+      this.segments.push(new L.Polyline ([[lat, lon]], {...style, ...this.style}))
     } else {
       if (this.last.name !== name)
-        this.segments.push(new L.Polyline ([[this.last.lat,this.last.lon]], style))
+        this.segments.push(new L.Polyline ([[this.last.lat,this.last.lon]], {...style, ...this.style}))
     }
     
     this.segments.at(-1).addLatLng([lat,lon])
@@ -200,12 +214,22 @@ Object.entries(lines.style).forEach(([name, style]) =>
     this.last = {name,lat,lon}
   })
 
+lines.prototype.restyle = function (color) {
+  const that = new lines (color)
+  that.segments = this.segments
+  that.last = this.last
+  if (this.last.name) that.last.name = 0
+  return that
+}
+
 lines.prototype.addTo = function (map) {
   this.segments.forEach(pl => pl.addTo(map))
 }
 
-function marker (lat, lon, icon, dat, msg, pic) {
-  const m = new L.marker ([lat, lon], {icon});
+track.prototype.marker = function (lat, lon, dat, msg, pic) {
+  //const icon = Object.assign(Object.create(Object.getPrototypeOf(this.symbol)), this.symbol)
+  //icon.className = [icon.className, ...this.style.classes].join(' ')
+  const m = new L.marker ([lat, lon], {icon:this.symbol});
   if (arguments.length <= 3)
     return m;
   
@@ -216,7 +240,8 @@ function marker (lat, lon, icon, dat, msg, pic) {
 // track
 const T = new track ()
 
-T.cape.bike(51.2406477,  2.9161213, 'za 13/5 14:00', '🇧🇪 Start', '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52915039516/in/datetaken-public"><img src="https://live.staticflickr.com/65535/52915039516_a66e7b38e7_c.jpg" /></a>')
+T.northbound()
+ .cape.bike(51.2406477,  2.9161213, 'za 13/5 14:00', '🇧🇪 Start', '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52915039516/in/datetaken-public"><img src="https://live.staticflickr.com/65535/52915039516_a66e7b38e7_c.jpg" /></a>')
  .legacy
   ( [51.5762520,  3.6173393, camp, 'za 13/5 19:00', '🇳🇱']
   , [52.0935209,  5.1114410, camp, 'zo 14/5 19:50', 0, '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52915194169/in/datetaken-public"><img src="https://live.staticflickr.com/65535/52915194169_0bf78ca542_c.jpg" /></a>']
@@ -249,7 +274,7 @@ T.cape.bike(51.2406477,  2.9161213, 'za 13/5 14:00', '🇧🇪 Start', '<a class
  .part.bike(66.0242818, 12.6420085)
  .part.boat(66.3392418, 13.0026677)
  .bike(66.7438443, 13.5594980, 'vr 9/6 22:30', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52963174638/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52963174638_d0d0fba288_c.jpg" width="729" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf')
- .part.bike(67.2883011, 14.3941594, 'za 10/6 18:30',0,'<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52963896462/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52963896462_d22239b947_c.jpg" width="800" height="600" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
+ .part.bike(67.2883011, 14.3941594, 'za 10/6 18:30<br />do 29/6 10:15',0,'<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/53011057313/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/53011057313_16523eef48_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
  .boat(67.8998519, 13.0438754, 'za 10/6 22:00<br/>zo 11/6<br />wo 28/6 23:45',0,'<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52963874712/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52963874712_b8455642e6_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
  .bike(68.3233079, 14.2025908, 'ma 12/6 22:00', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52969476407/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52969476407_b6268a1e1f_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8')
  .bike(68.8764104, 15.5666862, 'di 13/6 22:20', '🎂')
@@ -263,6 +288,7 @@ T.cape.bike(51.2406477,  2.9161213, 'za 13/5 14:00', '🇧🇪 Start', '<a class
  .bike(70.6384899, 25.3753230, 'ma 19/6 21:30', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52986396867/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52986396867_82f7014767_c.jpg" width="439" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
  .cape.bike(71.1709533, 25.7836599, 'di 20/6 21:00', '🦵🦵', '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52991019960/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52991019960_db66dcc661_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
  .branch(t => t.part.walk(71.1845720, 25.6742579, 'di 20/6 25:30', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52990560394/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52990560394_aa82d6d08d_c.jpg" width="800" height="441" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">'))
+ .southbound()
  .part.bike(70.9810860, 25.9685405, 'wo 21/6 06:00')
  .boat(70.6648820, 23.6817711, 'wo 21/6 11:00', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52990545414/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52990545414_f28ef500cc_c.jpg" width="600" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
  .branch(t => t.part.boat(70.7917866, 23.4138028)
@@ -277,6 +303,9 @@ T.cape.bike(51.2406477,  2.9161213, 'za 13/5 14:00', '🇧🇪 Start', '<a class
  .bike(68.6899607, 16.0324551, 'ma 26/6 21:15')
  .bike(68.3551378, 14.4874424, 'di 27/6 21:10',0,'<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/53005736317/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/53005736317_19244078bb_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
  .none.bike(67.8998519, 13.0438754) // (67.9067249, 13.0501485, 'wo 28/6 23:45')
+ .none.boat(67.2883011, 14.3941594) // 'do 29/6 10:15'
+ .part.boat(66.7102411, 13.2799330)
+ .bike(66.4818594, 13.2453959, 'do 29/6 23:45')
  .addTo(map)
 
 
