@@ -227,10 +227,9 @@ lines.prototype.addTo = function (map) {
 }
 
 track.prototype.marker = function (lat, lon, dat, msg, pic) {
-  //const icon = Object.assign(Object.create(Object.getPrototypeOf(this.symbol)), this.symbol)
-  //icon.className = [icon.className, ...this.style.classes].join(' ')
   const m = new L.marker ([lat, lon], {icon:this.symbol});
-  if (arguments.length <= 3)
+  
+  if (arguments.length < 3)
     return m;
   
   m.bindPopup(`<b>${dat.replace(/\s..:../g, '')}</b>${msg ? '<br/>'+msg : ''}${flickr(pic)}`);
