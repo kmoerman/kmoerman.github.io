@@ -137,9 +137,9 @@ function points () {
 points.prototype.push = function (lat, lon, sym, dat, msg, pic) {
   if (sym === undefined) return
   
-  const m = new L.marker ([lat, lon], {icon:this.symbol});
+  const m = new L.marker ([lat, lon], {icon:sym.icon});
   
-  if (arguments.length >= 3)
+  if (typeof dat === 'string')
     m.bindPopup(`<b>${dat.replace(/\s..:../g, '')}</b>${msg ? '<br/>'+msg : ''}${flickr(pic)}`);
   
   this.markers.push(m)
@@ -249,11 +249,6 @@ lines.prototype.restyle = function (color) {
 lines.prototype.addTo = function (map) {
   this.segments.forEach(pl => pl.addTo(map))
 }
-
-track.prototype.marker = function (lat, lon, dat, msg, pic) {
-  
-}
-
 
 // arctic circle
 const lat = 66.56375
