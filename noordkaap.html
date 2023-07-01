@@ -97,17 +97,22 @@ function flickr (embed) {
 flickr.rgx_img = /<img src="([^"]+)/;
 flickr.rgx_lnk = /href="([^"]+)/;
 
+function icon (className, size, order) {
+  const icon = L.divIcon({className, iconSize: [size, size]})
+  return {icon, order}
+}
+
 const Point =
  {north:
-  { camp : L.divIcon({className: 'point camp north', iconSize: [9,9]})
-  , part : L.divIcon({className: 'point part north', iconSize: [5,5]})
-  , cape : L.divIcon({className: 'point cape north', iconSize: [10,10]})
+  { camp : icon('point camp north',  9, 2)
+  , part : icon('point part north',  9, 1)
+  , cape : icon('point cape north', 10, 3)
   , none : undefined
   }
  ,south:
-  { camp : L.divIcon({className: 'point camp south', iconSize: [9,9]})
-  , part : L.divIcon({className: 'point part south', iconSize: [5,5]})
-  , cape : L.divIcon({className: 'point cape south', iconSize: [10,10]})
+  { camp : icon('point camp south',  9, 2)
+  , part : icon('point part south',  9, 1)
+  , cape : icon('point cape south', 10, 3)
   , none : undefined
   }
  }
@@ -125,8 +130,27 @@ const Style =
   , south: { color: Pink1, name: 'south' }
   }
 
-function track (style=Style.north) {
+function points () {
   this.markers = []
+}
+
+points.prototype.push = function (lat, lon, sym, dat, msg, pic) {
+  if (sym === undefined) return
+  
+  const m = new L.marker ([lat, lon], {icon:this.symbol});
+  
+  if (arguments.length >= 3)
+    m.bindPopup(`<b>${dat.replace(/\s..:../g, '')}</b>${msg ? '<br/>'+msg : ''}${flickr(pic)}`);
+  
+  this.markers.push(m)
+}
+
+points.prototype.forEach = function (...f) {
+  return this.markers.forEach(...f)
+}
+
+function track (style=Style.north) {
+  this.markers = new points ()
   this.root    = this
   this.branches= []
 
@@ -141,7 +165,7 @@ function track (style=Style.north) {
 }
 
 track.prototype.mark = function (lat, lon, ...rest) {
-  this.symbol && this.markers.push(this.marker(lat,lon, ...rest))
+  this.markers.push(lat, lon, this.symbol, ...rest)
 }
 
 track.prototype.branch = function (f) {
@@ -227,13 +251,7 @@ lines.prototype.addTo = function (map) {
 }
 
 track.prototype.marker = function (lat, lon, dat, msg, pic) {
-  const m = new L.marker ([lat, lon], {icon:this.symbol});
   
-  if (arguments.length < 3)
-    return m;
-  
-  m.bindPopup(`<b>${dat.replace(/\s..:../g, '')}</b>${msg ? '<br/>'+msg : ''}${flickr(pic)}`);
-  return m;
 }
 
 
