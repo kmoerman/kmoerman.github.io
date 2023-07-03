@@ -200,6 +200,13 @@ track.prototype.addTo = function (map) {
   return this.root
 }
 
+track.prototype.preview = function (f) {
+  if (window.location.search === 'p')
+    return this.root.branch(f)
+  else
+    return this.root
+}
+
 Object.entries(Style).forEach(([name,style]) =>
 track.prototype[`${name}bound`] = function () {
   const that = new track (style)
