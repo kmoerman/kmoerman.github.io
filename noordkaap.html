@@ -201,7 +201,7 @@ track.prototype.addTo = function (map) {
 }
 
 track.prototype.preview = function (f) {
-  if (window.location.search === 'p')
+  if (window.location.search.indexOf('p') >= 0)
     return this.root.branch(f)
   else
     return this.root
