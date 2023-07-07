@@ -156,12 +156,30 @@ function track (style=Style.north) {
 
   this.style   = style
   this.lines   = new lines (style.color)
+  this.preview = window.location.search.indexOf('p') >= 0 ? this : new sink (this)
 
   const point = Point[this.style.name]
   this.symbol = point.camp
 
   for (const t in point)
     this[t] = Object.assign(Object.create(this), {symbol: point[t]})
+}
+
+function sink (base) {
+  this.base = base
+  this.part = this
+}
+
+sink.prototype.walk =
+sink.prototype.boat =
+sink.prototype.bike =
+sink.prototype.branch =
+function () {
+  return this
+}
+
+sink.prototype.addTo = function (...map) {
+  return this.base.addTo(map)
 }
 
 track.prototype.mark = function (lat, lon, ...rest) {
@@ -200,12 +218,6 @@ track.prototype.addTo = function (map) {
   return this.root
 }
 
-track.prototype.preview = function (f) {
-  if (window.location.search.indexOf('p') >= 0)
-    return this.root.branch(f)
-  else
-    return this.root
-}
 
 Object.entries(Style).forEach(([name,style]) =>
 track.prototype[`${name}bound`] = function () {
@@ -346,7 +358,9 @@ T.northbound()
  .part.boat(61.2980325, 5.0855406)
  .bike(61.1257621, 5.8038852, 'wo 5/7 19:30')
  .bike(61.2122968, 6.0760661, 'do 6/7 16:15', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/53028211758/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/53028211758_f397bd57f8_c.jpg" width="800" height="600" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
- .preview(t => t.part.boat(60.8627359, 7.1142919).bike(60.5121261, 7.8634346))
+ .preview
+    .part.boat(60.8627359, 7.1142919)
+    .bike(60.5121261, 7.8634346)
  .addTo(map)
 
 
