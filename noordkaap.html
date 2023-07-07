@@ -179,7 +179,7 @@ function () {
 }
 
 sink.prototype.addTo = function (...map) {
-  return this.base.addTo(map)
+  return this.base.addTo(...map)
 }
 
 track.prototype.mark = function (lat, lon, ...rest) {
