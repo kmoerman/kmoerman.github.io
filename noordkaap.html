@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+#<!DOCTYPE html>
 <html>
 <head>
     <title>Noordkaap</title>
@@ -79,7 +79,7 @@ function mix (e) {
   document.querySelectorAll('.point').forEach(n => n.setAttribute('style', `mix-blend-mode: ${e.target.value};`))
 } 
         
-const map = L.map('map').setView([59.9139, 10.7522], 5);
+const map = L.map('map').setView([60.9139, 10.7522], 4);
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
             { detectRetina: true, attribution: '<br/>WhatsApp Klaas +32 474 75 69 30<br/>&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
