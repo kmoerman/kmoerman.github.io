@@ -159,7 +159,7 @@ function track (style=Style.north) {
   this.preview = track.qp.has('preview') ? this : new sink (this)
 
   this.point = Point[this.style.name]
-  this.symbol = point.camp
+  this.symbol = this.point.camp
 
   for (const t in this.point)
     this[t] = Object.assign(Object.create(this), {symbol: point[t]})
