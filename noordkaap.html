@@ -174,7 +174,7 @@ sink.prototype = Object.create(track.prototype)
 sink.prototype.constructor = sink
 
 Object.keys(Point.north).forEach(key =>
-  Object.defineProperty(sink.prototype, k, { get () { return this } }))
+  Object.defineProperty(sink.prototype, key, { get () { return this } }))
 sink.prototype.walk =
 sink.prototype.boat =
 sink.prototype.bike =
