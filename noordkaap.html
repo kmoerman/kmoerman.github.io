@@ -156,30 +156,44 @@ function track (style=Style.north) {
 
   this.style   = style
   this.lines   = new lines (style.color)
-  this.preview = window.location.search.indexOf('p') >= 0 ? this : new sink (this)
+  this.preview = track.qp.has('preview') ? this : new sink (this)
 
-  const point = Point[this.style.name]
+  this.point = Point[this.style.name]
   this.symbol = point.camp
 
-  for (const t in point)
+  for (const t in this.point)
     this[t] = Object.assign(Object.create(this), {symbol: point[t]})
 }
 
-function sink (base) {
-  this.base = base
-  this.part = this
-}
+track.qp = new URLSeachParams (window.location.search)
 
+function sink (_base) {
+  this._base = _base
+}
+sink.prototype = Object.create(track.prototype)
+sink.prototype.constructor = sink
+
+Object.keys(Point.north).forEach(key =>
+  Object.defineProperty(sink.prototype, k, { get () { return this } }))
 sink.prototype.walk =
 sink.prototype.boat =
 sink.prototype.bike =
 sink.prototype.branch =
+sink.prototype.legacy =
 function () {
   return this
 }
 
 sink.prototype.addTo = function (...map) {
-  return this.base.addTo(...map)
+  return this._base.addTo(...map)
+}
+
+track.prototype.show = function () {
+  return this
+}
+
+sink.prototype.show = function () {
+  return this._base
 }
 
 track.prototype.mark = function (lat, lon, ...rest) {
@@ -218,15 +232,29 @@ track.prototype.addTo = function (map) {
   return this.root
 }
 
-
-Object.entries(Style).forEach(([name,style]) =>
-track.prototype[`${name}bound`] = function () {
-  const that = new track (style)
-  that.lines = this.lines.restyle(that.style.color)
-  that.markers  = this.markers
-  that.branches = this.branches
-  return that
-})
+const bounds = Object.entries(Style)
+if (bounds.map(([name] => name).any(name => track.qp.has(`${name}bound`)))
+  bounds.forEach(([name,style]) =>
+  track.prototype[`${name}bound`] = function () {
+    if (track.qp.has(`${name}bound`)) {
+      const self = this.show()
+      const that = new track (style)
+      that.lines = self.lines.restyle(that.style.color)
+      return that
+    }
+    else {
+      return new sink (this)
+    }
+  })
+else
+  bounds.forEach(([name,style]) =>
+  track.prototype[`${name}bound`] = function () {
+    const that = new track (style)
+    that.lines = this.lines.restyle(that.style.color)
+    that.markers  = this.markers
+    that.branches = this.branches
+    return that
+  })
 
 
 function lines (color) {
