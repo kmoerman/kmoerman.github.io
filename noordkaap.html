@@ -165,7 +165,7 @@ function track (style=Style.north) {
     this[t] = Object.assign(Object.create(this), {symbol: point[t]})
 }
 
-track.qp = new URLSeachParams (window.location.search)
+track.qp = new URLSearchParams (window.location.search)
 
 function sink (_base) {
   this._base = _base
@@ -233,7 +233,7 @@ track.prototype.addTo = function (map) {
 }
 
 const bounds = Object.entries(Style)
-if (bounds.map(([name]) => name).any(name => track.qp.has(`${name}bound`)))
+if (bounds.map(([name]) => name).some(name => track.qp.has(`${name}bound`)))
   bounds.forEach(([name,style]) =>
   track.prototype[`${name}bound`] = function () {
     if (track.qp.has(`${name}bound`)) {
