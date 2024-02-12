@@ -162,7 +162,7 @@ function track (style=Style.north) {
   this.symbol = this.point.camp
 
   for (const t in this.point)
-    this[t] = Object.assign(Object.create(this), {symbol: point[t]})
+    this[t] = Object.assign(Object.create(this), {symbol: this.point[t]})
 }
 
 track.qp = new URLSearchParams (window.location.search)
