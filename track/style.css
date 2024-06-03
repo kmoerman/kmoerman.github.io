@@ -80,9 +80,7 @@ div.point-mark {
 }
 
 .line-jump {
-  stroke-width: 1px;
-  opacity: 0.9;
-  stroke-dasharray: 4 4;
+  stroke-width: 0;
 }
 
 .leaflet-control-attribution svg {
