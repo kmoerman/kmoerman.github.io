@@ -43,7 +43,11 @@
       }
     , { legacy: (t, ...xs) => xs.reduce((t, x) => t.goto(...x), t) }
     )
-   .show('map', [[48.2, 5.3], 6], {attribution: '<br/>WhatsApp Klaas +32 474 75 69 30<br/>&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'})
+   .show(
+    'map',
+    [[47.9, 5.3], 6],
+    {attribution: '<br/>WhatsApp Klaas +32 474 75 69 30<br/>&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}
+   )
    .add
     ( L.control.scale({metric: true, imperial: false})
     )
