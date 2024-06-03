@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Les Prats 2024</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <link rel="stylesheet" href="track/style.css" />
+  <style>
+    .section-south {
+      --track-color: #de3abd;
+    }
+    .section-north {
+      --track-color: #f084da;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="track/track.js"></script>
+  <script>
+
+  function flickr (embed) {
+    const img = (/<img src="([^"]+)/.exec(embed || '') || [])[1];
+    const lnk = (/href="([^"]+)/.exec(embed || '') || [])[1];
+
+    if (!lnk || !img)
+      return embed;
+
+    return `<a class="flickr" href="${lnk}"><img src="${img}" /></a>`;
+  }
+
+  const T = track.from (L
+    , { goto: 1
+      , skip: 1
+      , jump: 1
+      }
+    , { mark: 4
+      , [track.default]: 3
+      , part: 2
+      , none: 1
+      }
+    , { legacy: (t, ...xs) => xs.reduce((t, x) => t.goto(...x), t) }
+    )
+   .show('map', [[48.2, 5.3], 6], {attribution: '<br/>WhatsApp Klaas +32 474 75 69 30<br/>&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'})
+   .add
+    ( L.control.scale({metric: true, imperial: false})
+    )
+    .select(window.location.search.slice(1).split('&').filter(x => x))
+
+
+  T.goto.part(51.21821356886526, 2.928772105957463, 'di 4/6')
+   .skip.mark(51.03979418122038, 3.648705754920067, 'di 4/6')
+   .goto(50.32068011546858, 3.778468306709175, 'di 4/6')
+   //.jump.mark(44.4122771077932, 6.5428130424239495)
+  </script>
+</body>
+</html>

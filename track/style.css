@@ -1,0 +1,99 @@
+body {
+  padding: 0;
+  margin: 0;
+}
+
+#map {
+  height: 100vh;
+  width: 100vw;
+}
+
+a.flickr {
+  display: block;
+  width: 10em;
+  padding: 0;
+  border: 0;
+  margin: 0.5em 0 0 0;
+}
+
+h3 {
+  font-size: 100%;
+  font-weight: bold;
+}
+
+a.flickr img {
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+div.point {
+  display: block;
+  border: 2px solid var(--track-color);
+  border-radius: 50%;
+  padding: 0;
+  opacity: 0.8;
+  box-sizing: border-box;
+  background-color: var(--track-color)
+}
+
+div.point-none {
+  width: 0;
+  height: 0;
+}
+
+div.point-part {
+  margin-top: -2px;
+  margin-left: -2px;
+  width: 4px;
+  height: 4px;
+  background: var(--track-color);
+}
+
+
+div.point-default {
+  margin-top: -4.5px;
+  margin-left: -4.5px;
+  width: 9px;
+  height: 9px;
+  background: #fff;
+}
+
+div.point-mark {
+  margin-top: -5px;
+  margin-left: -5px;
+  width: 10px;
+  height: 10px;
+  background: var(--mark-color);
+  opacity: 0.95;
+}
+
+.line {
+  stroke-width: 3;
+  stroke: var(--track-color);
+}
+
+.line-skip {
+  opacity: 0.9;
+  stroke-dasharray: 0 6;
+}
+
+.line-jump {
+  stroke-width: 1px;
+  opacity: 0.9;
+  stroke-dasharray: 4 4;
+}
+
+.leaflet-control-attribution svg {
+  display: none !important;
+}
+
+.leaflet-control-attribution a + span {
+  display: none;
+}
+
+:root {
+  --track-color: #de3abd;
+  --mark-color: #ffee00;
+}

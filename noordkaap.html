@@ -1,404 +1,146 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Noordkaap</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
-     integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
-     crossorigin=""/>
-    <style type="text/css">
-        body {
-            padding: 0;
-            margin: 0;
-        }
-        html, body, #map {
-            height: 100%;
-            width: 100%;
-        }
-        
-        a.flickr {
-            display: block;
-            width: 10em;
-            padding: 0;
-            border: 0;
-            margin: 0.5em 0 0 0;
-        }
-        
-        a.flickr img {
-            display: block;
-            width: 100%;
-            padding: 0;
-            margin: 0;
-        }
-        
-        div.point {
-          display: block;
-          border: 2px solid #f084da;
-          border-radius: 50%;
-          padding: 0;
-          opacity: 0.8;
-          box-sizing: border-box;
-        }
-        
-        div.point.camp {
-            width: 9px;
-            height: 9px;
-            background: #fff;
-        }
-        
-        div.point.part {
-            width: 5px;
-            height: 5px;
-            background: #f084da;
-        }
-        
-        div.point.cape {
-            width: 10px;
-            height: 10px;
-            background: #ffee00;
-        }
-        
-        div.point.south {
-          border-color: #de3abd;
-        }
-        
-        div.point.south.part {
-          background: #de3abd;
-        }
-    </style>
+  <title>Noordkaap</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <link rel="stylesheet" href="track/style.css" />
+  <style>
+    .section-south {
+      --track-color: #de3abd;
+    }
+    .section-north {
+      --track-color: #f084da;
+    }
+  </style>
 </head>
 <body>
-    <div id="map"></div>
-    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
-     integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
-     crossorigin=""></script>
-    <script>
+  <div id="map"></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="track/track.js"></script>
+  <script>
 
-function mix (e) {
-  document.querySelectorAll('.point').forEach(n => n.setAttribute('style', `mix-blend-mode: ${e.target.value};`))
-} 
-        
-const map = L.map('map').setView([63, 12], 4);
+  function flickr (embed) {
+    const img = (/<img src="([^"]+)/.exec(embed || '') || [])[1];
+    const lnk = (/href="([^"]+)/.exec(embed || '') || [])[1];
 
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-            { detectRetina: true, attribution: '<br/>WhatsApp Klaas +32 474 75 69 30<br/>&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map);
+    if (!lnk || !img)
+      return embed;
 
-function flickr (embed) {
-  const img = (flickr.rgx_img.exec(embed || '') || [])[1];
-  const lnk = (flickr.rgx_lnk.exec(embed || '') || [])[1];
-
-  if (!lnk || !img)
-    return '';
-
-  return `<a class="flickr" href="${lnk}"><img src="${img}" /></a>`;
-}
-flickr.rgx_img = /<img src="([^"]+)/;
-flickr.rgx_lnk = /href="([^"]+)/;
-
-function icon (className, size, order) {
-  const icon = L.divIcon({className, iconSize: [size, size]})
-  return {icon, order}
-}
-
-const Point =
- {north:
-  { camp : icon('point camp north',  9, 2)
-  , part : icon('point part north',  5, 1)
-  , cape : icon('point cape north', 10, 3)
-  , none : undefined
-  }
- ,south:
-  { camp : icon('point camp south',  9, 2)
-  , part : icon('point part south',  5, 1)
-  , cape : icon('point cape south', 10, 3)
-  , none : undefined
-  }
- }
-
-const camp = undefined
-
-const Pink   = '#ed64d2'
-const Pink0  = '#f084da'
-const Pink1  = '#de3abd'
-const Yellow = '#ffe000'
-const Black  = '#000000'
-
-const Style =
-  { north: { color: Pink0, name: 'north' }
-  , south: { color: Pink1, name: 'south' }
+    return `<a class="flickr" href="${lnk}"><img src="${img}" /></a>`;
   }
 
-function points () {
-  this.markers = []
-}
+  // arctic circle
+  const lat = 66.56375
+  const lon = 13.37
+  const delta = 0.5
 
-points.prototype.push = function (lat, lon, sym, dat, msg, pic) {
-  if (sym === undefined) return
-  
-  const m = new L.marker ([lat, lon], {icon:sym.icon});
-  
-  if (typeof dat === 'string')
-    m.bindPopup(`<b>${dat.replace(/\s..:../g, '')}</b>${msg ? '<br/>'+msg : ''}${flickr(pic)}`);
-  
-  this.markers.push(m)
-}
-
-points.prototype.forEach = function (...f) {
-  return this.markers.forEach(...f)
-}
-
-function track (style=Style.north) {
-  this.markers = new points ()
-  this.root    = this
-  this.branches= []
-
-  this.style   = style
-  this.lines   = new lines (style.color)
-  this.preview = track.qp.has('preview') ? this : new sink (this)
-
-  this.point = Point[this.style.name]
-  this.symbol = this.point.camp
-
-  for (const t in this.point)
-    this[t] = Object.assign(Object.create(this), {symbol: this.point[t]})
-}
-
-track.qp = new URLSearchParams (window.location.search)
-
-function sink (_base) {
-  this._base = _base
-}
-sink.prototype = Object.create(track.prototype)
-sink.prototype.constructor = sink
-
-Object.keys(Point.north).forEach(key =>
-  Object.defineProperty(sink.prototype, key, { get () { return this } }))
-sink.prototype.walk =
-sink.prototype.boat =
-sink.prototype.bike =
-sink.prototype.branch =
-sink.prototype.legacy =
-function () {
-  return this
-}
-
-sink.prototype.addTo = function (...map) {
-  return this._base.addTo(...map)
-}
-
-track.prototype.show = function () {
-  return this
-}
-
-sink.prototype.show = function () {
-  return this._base
-}
-
-track.prototype.mark = function (lat, lon, ...rest) {
-  this.markers.push(lat, lon, this.symbol, ...rest)
-}
-
-track.prototype.branch = function (f) {
-  const branch = new track (this.style)
-  branch.lines.last = Object.assign({}, this.lines.last, {name:0})
-  this.branches.push(branch)
-  f(branch)
-  return this.root
-}
-
-track.prototype.walk =
-track.prototype.bike = function (lat,lon,...rest) {
-  this.mark(lat,lon,...rest)
-  this.lines.line(lat,lon)
-  return this.root
-}
-
-track.prototype.boat = function (lat,lon,...rest) {
-  this.mark(lat,lon,...rest)
-  this.lines.dots(lat,lon)
-  return this.root
-}
-
-track.prototype.legacy = function (...entries) {
-  return entries.reduce((t, [lat,lon,,...rest]) => t.bike(lat,lon,...rest), this)
-}
-
-track.prototype.addTo = function (map) {
-  this.lines.addTo(map)
-  this.branches.forEach(b => b.addTo(map))
-  this.markers.forEach(m => m.addTo(map))
-  return this.root
-}
-
-const bounds = Object.entries(Style)
-if (bounds.map(([name]) => name).some(name => track.qp.has(`${name}bound`)))
-  bounds.forEach(([name,style]) =>
-  track.prototype[`${name}bound`] = function () {
-    if (track.qp.has(`${name}bound`)) {
-      const self = this.show()
-      const that = new track (style)
-      that.lines = self.lines.restyle(that.style.color)
-      return that
-    }
-    else {
-      return new sink (this)
-    }
-  })
-else
-  bounds.forEach(([name,style]) =>
-  track.prototype[`${name}bound`] = function () {
-    const that = new track (style)
-    that.lines = this.lines.restyle(that.style.color)
-    that.markers  = this.markers
-    that.branches = this.branches
-    return that
-  })
+  const T = track.from (L
+    , { goto: 1
+      , skip: 1
+      }
+    , { mark: 4
+      , [track.default]: 3
+      , part: 2
+      , none: 1
+      }
+    , { legacy: (t, ...xs) => xs.reduce((t, x) => t.goto(...x), t) }
+    )
+   .show('map', [[63, 12], 4], {attribution: '<br/>WhatsApp Klaas +32 474 75 69 30<br/>&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'})
+   .add
+    ( new L.Polyline ([[lat, lon-delta],[lat,lon+delta]], {color: '#ed64d2', opacity: 0.9, weight: 1, dashArray: '8 4'})
+    , L.control.scale({metric: true, imperial: false})
+    )
+    .select(window.location.search.slice(1).split('&').filter(x => x))
 
 
-function lines (color) {
-  this.segments = []
-  this.last     = {}
-  this.style    = {color}
-}
-
-
-lines.style =
-  { line: {color: Black, weight:3, opacity: 0.8}
-  , dots: {color: Black, weight:3, opacity: 0.9, dashArray: '0 6'}
-  }
-
-Object.entries(lines.style).forEach(([name, style]) => 
-  lines.prototype[name] = function (lat, lon) {
-    if (this.last.name === undefined) {
-      this.segments.push(new L.Polyline ([[lat, lon]], {...style, ...this.style}))
-    } else {
-      if (this.last.name !== name)
-        this.segments.push(new L.Polyline ([[this.last.lat,this.last.lon]], {...style, ...this.style}))
-    }
-    
-    this.segments.at(-1).addLatLng([lat,lon])
-    
-    this.last = {name,lat,lon}
-  })
-
-lines.prototype.restyle = function (color) {
-  const that = new lines (color)
-  that.segments = this.segments
-  that.last = this.last
-  if (this.last.name) that.last.name = 0
-  return that
-}
-
-lines.prototype.addTo = function (map) {
-  this.segments.forEach(pl => pl.addTo(map))
-}
-
-// arctic circle
-const lat = 66.56375
-const lon = 13.37
-const delta = 0.5
-const arctic = new L.Polyline([[lat, lon-delta],[lat,lon+delta]], {color: Pink, opacity: 0.9, weight: 1, dashArray: '8 4'})
-                       .addTo(map);
-
-
-// track
-const T = new track ()
-
-T.northbound()
- .none.bike(51.2406477,  2.9161213)
- .legacy
-  ( [51.5762520,  3.6173393, camp, 'za 13/5 19:00', '🇳🇱']
-  , [52.0935209,  5.1114410, camp, 'zo 14/5 19:50', 0, '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52915194169/in/datetaken-public"><img src="https://live.staticflickr.com/65535/52915194169_0bf78ca542_c.jpg" /></a>']
-  , [52.2855475,  6.4628477, camp, 'ma 15/5 18:45']
-  , [52.6923229,  7.2843355, camp, 'di 16/5 17:30', '🇩🇪']
-  , [53.0881179,  8.8082990, camp, 'wo 17/5 21:05']
-  , [53.9402006, 10.8567684, camp, 'do 18/5 20:55']
-  )
- .boat(55.6273423, 12.9901649, 'vr 19/5 07:00', '🇸🇪')
- .legacy
-  ( [55.7463435, 12.5873856, camp, 'za 20/5 19:45', '🇩🇰']
-  , [56.2663373, 12.8370822, camp, 'zo 21/5 20:00', '🇸🇪', '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52915194264/in/datetaken-public"><img src="https://live.staticflickr.com/65535/52915194264_b346a69260_c.jpg" /></a>']
-  , [57.0605297, 12.2744754, camp, 'ma 22/5 20:45']
-  , [57.7900683, 11.8339524, camp, 'di 23/5 21:30', undefined, '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52919963552/in/datetaken-public/"><img src="https://live.staticflickr.com/65535/52919963552_1015bd1960_c.jpg" /></a>']
-  , [58.8468393, 11.5457702, camp, 'wo 24/5 23:20', undefined, '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52924580969/in/datetaken-public/"><img src="https://live.staticflickr.com/65535/52924580969_87db42b008_c.jpg" /></a>']
-  , [59.8987718, 10.7731690, camp, 'do 25/5 21:15<br/>vr 26/5', '🇳🇴', '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52932195648/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52932195648_5a1ee8990a_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">']
-  , [60.0447897, 10.3841833, camp, 'za 27/5 20:10', undefined, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52930446575/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52930446575_5d6d338b8e_c.jpg" width="481" height="800" alt="Untitled"/></a>']
-  , [60.2750742,  9.9705605, camp, 'zo 28/5 21:05']
-  , [60.8831138,  9.4275872, camp, 'ma 29/5 22:30', undefined, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52935878524/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52935878524_f8768254a0_c.jpg" width="800" height="600" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">']
-  , [61.6675408,  9.0327375, camp, 'di 30/5 21:30', '🏔️ Valdresflye', '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52938435001/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52938435001_e9952f99e9_c.jpg" width="800" height="600" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">']
-  , [62.0953492,  7.2189268, camp, 'wo 31/5 23:20<br/>do 1/6', undefined, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52940740767/in/datetaken-public" title="Untitled"><img src="https://live.staticflickr.com/65535/52940740767_f69ce5bd4e_c.jpg" width="800" height="366" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"']
-  , [62.7377522,  7.4521446, camp, 'vr 2/6 24:30', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52947631310/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52947631310_e9a492fe91_c.jpg" width="600" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"']
-  , [63.2703583,  8.4956540, camp, 'za 3/6 21:00', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52947241086/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52947241086_f7587e9aab_c.jpg" width="600" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"']
-  , [63.4329740, 10.3725049, camp, 'zo 4/6 20:30', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52952847086/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52952847086_f91ec27d4b_c.jpg" width="800" height="600" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8']
-  , [63.5871109, 10.4224705, camp, 'ma 5/6 20:15']
-  , [64.1080140, 11.3850700, camp, 'di 6/6 20:30']
-  , [64.9844040, 11.7575759, camp, 'wo 7/6 23:30', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52957301422/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52957301422_225ef30db7_c.jpg" width="800" height="600" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8']
-  , [65.8956720, 12.5362453, camp, 'do 8/6 21:30', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52962049820/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52962049820_db2c55e715_c.jpg" width="800" height="600" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"']
-  )
- .part.bike(66.0242818, 12.6420085)
- .part.boat(66.3392418, 13.0026677)
- .bike(66.7438443, 13.5594980, 'vr 9/6 22:30', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52963174638/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52963174638_d0d0fba288_c.jpg" width="729" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf')
- .none.bike(67.2883011, 14.3941594)
- .none.boat(67.8998519, 13.0438754)
- .bike(68.3233079, 14.2025908, 'ma 12/6 22:00', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52969476407/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52969476407_b6268a1e1f_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8')
- .bike(68.8764104, 15.5666862, 'di 13/6 22:20', '🎂')
- .part.bike(69.3268050, 16.1335661)
- .part.boat(69.3633950, 17.0525026)
- .bike(69.6140502, 18.0906804, 'wo 14/6 21:00')
- .bike(69.6457804, 18.9506429, 'do 15/6 14:00', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52977204886/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52977204886_4a3b27564f_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
- .bike(69.6013013, 19.9515105, 'vr 16/6 20:30', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52978684927/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52978684927_ccaa88a783_c.jpg" width="800" height="600" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
- .bike(69.8403800, 21.8461334, 'za 17/6 23:00', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52981059602/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52981059602_cfbeca2836_c.jpg" width="800" height="600" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
- .bike(70.0670130, 23.5411856, 'zo 18/6 22:30')
- .bike(70.6384899, 25.3753230, 'ma 19/6 21:30', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52986396867/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52986396867_82f7014767_c.jpg" width="439" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
- .part.bike(71.1709533, 25.7836599/*, 'di 20/6 21:00', '🦵🦵', '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52991019960/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52991019960_db66dcc661_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">'*/)
- .branch(t => t.part.walk(71.1845720, 25.6742579, 'di 20/6 25:30', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52990560394/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52990560394_aa82d6d08d_c.jpg" width="800" height="441" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">'))
- .southbound()
- .cape.bike(71.1709533, 25.7836599, 'di 20/6 21:00', '🦵🦵', '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52991019960/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52991019960_db66dcc661_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
- .part.bike(70.9810860, 25.9685405, 'wo 21/6 06:00', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52990545414/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52990545414_f28ef500cc_c.jpg" width="600" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
- .boat(70.6648820, 23.6817711, 'wo 21/6 11:00')
- .branch(t => t.part.boat(70.7917866, 23.4138028)
-               .bike(70.7905874, 23.3320504, 'do 22/6 20:30'))
- .part.boat(70.2385466, 22.3477377)
- .branch(t => t.bike(70.2381443, 22.1035863, 'vr 23/6 20:45', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52997795021/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52997795021_d04223252e_c.jpg" width="800" height="600" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
-               .part.walk(70.2147456, 22.0880784))
- .boat(70.0351390, 20.9826800, 'za 24/6 19:30', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52998592268/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52998592268_9e19ea4e32_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
- .bike(69.0913744, 19.6071665, 'zo 25/6 22:00')
- .part.bike(69.2290900, 17.9742809)
- .part.boat(68.8010655, 16.5467097)
- .bike(68.6899607, 16.0324551, 'ma 26/6 21:15')
- .bike(68.3551378, 14.4874424, 'di 27/6 21:10',0,'<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/53005736317/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/53005736317_19244078bb_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
- .bike(67.8998519, 13.0438754, 'za 10/6 22:00<br/>zo 11/6<br />wo 28/6 23:45',0,'<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52963874712/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52963874712_b8455642e6_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">') // (67.9067249, 13.0501485, 'wo 28/6 23:45')
- .part.boat(67.2883011, 14.3941594, 'za 10/6 18:30<br />do 29/6 10:15',0,'<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/53011057313/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/53011057313_16523eef48_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">') // 'do 29/6 10:15'
- .part.boat(66.7102411, 13.2799330)
- .bike(66.4818594, 13.2453959, 'do 29/6 23:45')
- .bike(66.0220307, 12.6841215, 'vr 30/6 21:00')
- .bike(65.1657410, 12.1155830, 'za 1/7 21:45', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/53016057190/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/53016057190_7f8d2308f9_c.jpg" width="800" height="600" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
- .part.bike(65.0845200, 11.8299301)
- .part.boat(64.4645600, 11.4914040)
- .bike(63.8695140, 10.7998737, 'zo 2/7 24:30')
- .bike(63.4430780, 10.4070570, 'ma 3/7 16:00', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/53019605387/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/53019605387_1be6f47415_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
- .boat(61.6017060, 5.0253650, 'di 4/7 09:30')
- //.part.boat(61.3455000, 5.0654400)
- .part.boat(61.2980325, 5.0855406)
- .bike(61.1257621, 5.8038852, 'wo 5/7 19:30')
- .bike(61.2122968, 6.0760661, 'do 6/7 16:15', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/53028211758/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/53028211758_f397bd57f8_c.jpg" width="800" height="600" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
- .part.boat(60.8627359, 7.1142919)
- .bike(60.6147707, 7.4268014, 'vr 7/7 19:15','🏔️ ЯA⅃LARVEGEN', '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/53030345832/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/53030345832_6d6c0c7bb6_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
- .bike(60.1533162, 8.6124018, 'za 8/7 20:50', '🏔️ Hardangervidda', '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/53032173389/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/53032173389_abbd64506f_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
- .bike(59.7555738, 7.5666055, 'zo 9/7 22:00', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/53034440136/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/53034440136_8c067e2c99_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
- .bike(58.9891783, 7.5474425, 'ma 10/7 21:00')
- .bike(58.1442945, 7.9859209, 'di 11/7 20:10', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/53039188804/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/53039188804_0aa53ff0f3_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
- .boat(53.3421347, 7.1852983, 'wo 12/7 34:15', 0, '<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/53041750087/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/53041750087_3ba1a8a61c_c.jpg" width="800" height="600" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')
- .bike(52.5210987, 5.8908002, 'do 13/7 23:15', '🎂🎂')
- .cape.bike(51.2406477, 2.9161213,  'za 13/5 14:00<br/>vr 14/7 25:00', '🇧🇪<br/>Vi snakkes!', '<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52915039516/in/datetaken-public"><img src="https://live.staticflickr.com/65535/52915039516_a66e7b38e7_c.jpg" /></a>')
- .addTo(map)
-
-
-// scale
-L.control.scale({metric: true, imperial: false}).addTo(map);
-    
-    </script>
+  T.section('north')
+  .goto.mark(51.2406477,  2.9161213, 'za 13/5 14:00', '🇧🇪', flickr('<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52915039516/in/datetaken-public"><img src="https://live.staticflickr.com/65535/52915039516_a66e7b38e7_c.jpg" /></a>'))
+  .legacy
+    ( [51.5762520,  3.6173393, 'za 13/5 19:00', '🇳🇱']
+    , [52.0935209,  5.1114410, 'zo 14/5 19:50', 0, flickr('<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52915194169/in/datetaken-public"><img src="https://live.staticflickr.com/65535/52915194169_0bf78ca542_c.jpg" /></a>')]
+    , [52.2855475,  6.4628477, 'ma 15/5 18:45']
+    , [52.6923229,  7.2843355, 'di 16/5 17:30', '🇩🇪']
+    , [53.0881179,  8.8082990, 'wo 17/5 21:05']
+    , [53.9402006, 10.8567684, 'do 18/5 20:55']
+    )
+  .skip(55.6273423, 12.9901649, 'vr 19/5 07:00', '🇸🇪')
+  .legacy
+    ( [55.7463435, 12.5873856, 'za 20/5 19:45', '🇩🇰']
+    , [56.2663373, 12.8370822, 'zo 21/5 20:00', '🇸🇪', flickr('<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52915194264/in/datetaken-public"><img src="https://live.staticflickr.com/65535/52915194264_b346a69260_c.jpg" /></a>')]
+    , [57.0605297, 12.2744754, 'ma 22/5 20:45']
+    , [57.7900683, 11.8339524, 'di 23/5 21:30', 0, flickr('<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52919963552/in/datetaken-public/"><img src="https://live.staticflickr.com/65535/52919963552_1015bd1960_c.jpg" /></a>')]
+    , [58.8468393, 11.5457702, 'wo 24/5 23:20', 0, flickr('<a class="flickr" href="https://www.flickr.com/photos/198383566@N06/52924580969/in/datetaken-public/"><img src="https://live.staticflickr.com/65535/52924580969_87db42b008_c.jpg" /></a>')]
+    , [59.8987718, 10.7731690, 'do 25/5 21:15<br/>vr 26/5', '🇳🇴', flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52932195648/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52932195648_5a1ee8990a_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')]
+    , [60.0447897, 10.3841833, 'za 27/5 20:10', 0, flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52930446575/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52930446575_5d6d338b8e_c.jpg" width="481" height="800" alt="Untitled"/></a>')]
+    , [60.2750742,  9.9705605, 'zo 28/5 21:05']
+    , [60.8831138,  9.4275872, 'ma 29/5 22:30', 0, flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52935878524/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52935878524_f8768254a0_c.jpg" width="800" height="600" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')]
+    , [61.6675408,  9.0327375, 'di 30/5 21:30', '🏔️ Valdresflye', flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52938435001/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52938435001_e9952f99e9_c.jpg" width="800" height="600" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')]
+    , [62.0953492,  7.2189268, 'wo 31/5 23:20<br/>do 1/6', 0, flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52940740767/in/datetaken-public" title="Untitled"><img src="https://live.staticflickr.com/65535/52940740767_f69ce5bd4e_c.jpg" width="800" height="366" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"')]
+    , [62.7377522,  7.4521446, 'vr 2/6 24:30', 0, flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52947631310/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52947631310_e9a492fe91_c.jpg" width="600" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"')]
+    , [63.2703583,  8.4956540, 'za 3/6 21:00', 0, flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52947241086/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52947241086_f7587e9aab_c.jpg" width="600" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"')]
+    , [63.4329740, 10.3725049, 'zo 4/6 20:30', 0, flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52952847086/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52952847086_f91ec27d4b_c.jpg" width="800" height="600" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8')]
+    , [63.5871109, 10.4224705, 'ma 5/6 20:15']
+    , [64.1080140, 11.3850700, 'di 6/6 20:30']
+    , [64.9844040, 11.7575759, 'wo 7/6 23:30', 0, flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52957301422/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52957301422_225ef30db7_c.jpg" width="800" height="600" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8')]
+    , [65.8956720, 12.5362453, 'do 8/6 21:30', 0, flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52962049820/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52962049820_db2c55e715_c.jpg" width="800" height="600" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"')]
+    )
+  .goto.part(66.0242818, 12.6420085)
+  .skip.part(66.3392418, 13.0026677)
+  .goto(66.7438443, 13.5594980, 'vr 9/6 22:30', 0, flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52963174638/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52963174638_d0d0fba288_c.jpg" width="729" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf'))
+  .goto.none(67.2883011, 14.3941594)
+  .skip.none(67.8998519, 13.0438754)
+  .goto(68.3233079, 14.2025908, 'ma 12/6 22:00', 0, flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52969476407/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52969476407_b6268a1e1f_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8'))
+  .goto(68.8764104, 15.5666862, 'di 13/6 22:20', '🎂')
+  .goto.part(69.3268050, 16.1335661)
+  .skip.part(69.3633950, 17.0525026)
+  .goto(69.6140502, 18.0906804, 'wo 14/6 21:00')
+  .goto(69.6457804, 18.9506429, 'do 15/6 14:00', 0, flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52977204886/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52977204886_4a3b27564f_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">'))
+  .goto(69.6013013, 19.9515105, 'vr 16/6 20:30', 0, flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52978684927/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52978684927_ccaa88a783_c.jpg" width="800" height="600" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">'))
+  .goto(69.8403800, 21.8461334, 'za 17/6 23:00', 0, flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52981059602/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52981059602_cfbeca2836_c.jpg" width="800" height="600" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">'))
+  .goto(70.0670130, 23.5411856, 'zo 18/6 22:30')
+  .goto(70.6384899, 25.3753230, 'ma 19/6 21:30', 0, flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52986396867/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52986396867_82f7014767_c.jpg" width="439" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">'))
+  .goto.mark(71.1709533, 25.7836599, 'di 20/6 21:00', '🦵🦵', flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52991019960/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52991019960_db66dcc661_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">'))
+  .branch(t => t.goto.part(71.1845720, 25.6742579, 'di 20/6 25:30', 0, flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52990560394/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52990560394_aa82d6d08d_c.jpg" width="800" height="441" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')))
+  .section('south')
+  .goto.part(70.9810860, 25.9685405, 'wo 21/6 06:00', 0, flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52990545414/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52990545414_f28ef500cc_c.jpg" width="600" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">'))
+  .skip(70.6648820, 23.6817711, 'wo 21/6 11:00')
+  .branch(t => t.skip.part(70.7917866, 23.4138028)
+                .goto(70.7905874, 23.3320504, 'do 22/6 20:30'))
+  .skip.part(70.2385466, 22.3477377)
+  .branch(t => t.goto(70.2381443, 22.1035863, 'vr 23/6 20:45', 0, flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52997795021/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52997795021_d04223252e_c.jpg" width="800" height="600" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">'))
+                .goto.part(70.2147456, 22.0880784))
+  .skip(70.0351390, 20.9826800, 'za 24/6 19:30', 0, flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52998592268/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52998592268_9e19ea4e32_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">'))
+  .goto(69.0913744, 19.6071665, 'zo 25/6 22:00')
+  .goto.part(69.2290900, 17.9742809)
+  .skip.part(68.8010655, 16.5467097)
+  .goto(68.6899607, 16.0324551, 'ma 26/6 21:15')
+  .goto(68.3551378, 14.4874424, 'di 27/6 21:10',0, flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/53005736317/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/53005736317_19244078bb_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">'))
+  .goto(67.8998519, 13.0438754, 'za 10/6 22:00<br/>zo 11/6<br />wo 28/6 23:45',0, flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/52963874712/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/52963874712_b8455642e6_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')) // (67.9067249, 13.0501485, 'wo 28/6 23:45')
+  .skip.part(67.2883011, 14.3941594, 'za 10/6 18:30<br />do 29/6 10:15',0, flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/53011057313/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/53011057313_16523eef48_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">')) // 'do 29/6 10:15'
+  .skip.part(66.7102411, 13.2799330)
+  .goto(66.4818594, 13.2453959, 'do 29/6 23:45')
+  .goto(66.0220307, 12.6841215, 'vr 30/6 21:00')
+  .goto(65.1657410, 12.1155830, 'za 1/7 21:45', 0, flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/53016057190/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/53016057190_7f8d2308f9_c.jpg" width="800" height="600" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">'))
+  .goto.part(65.0845200, 11.8299301)
+  .skip.part(64.4645600, 11.4914040)
+  .goto(63.8695140, 10.7998737, 'zo 2/7 24:30')
+  .goto(63.4430780, 10.4070570, 'ma 3/7 16:00', 0, flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/53019605387/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/53019605387_1be6f47415_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">'))
+  .skip(61.6017060, 5.0253650, 'di 4/7 09:30')
+  //.part.skip(61.3455000, 5.0654400)
+  .skip.part(61.2980325, 5.0855406)
+  .goto(61.1257621, 5.8038852, 'wo 5/7 19:30')
+  .goto(61.2122968, 6.0760661, 'do 6/7 16:15', 0, flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/53028211758/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/53028211758_f397bd57f8_c.jpg" width="800" height="600" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">'))
+  .skip.part(60.8627359, 7.1142919)
+  .goto(60.6147707, 7.4268014, 'vr 7/7 19:15','🏔️ ЯA⅃LARVEGEN', flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/53030345832/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/53030345832_6d6c0c7bb6_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">'))
+  .goto(60.1533162, 8.6124018, 'za 8/7 20:50', '🏔️ Hardangervidda', flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/53032173389/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/53032173389_abbd64506f_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">'))
+  .goto(59.7555738, 7.5666055, 'zo 9/7 22:00', 0, flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/53034440136/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/53034440136_8c067e2c99_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">'))
+  .goto(58.9891783, 7.5474425, 'ma 10/7 21:00')
+  .goto(58.1442945, 7.9859209, 'di 11/7 20:10', 0, flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/53039188804/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/53039188804_0aa53ff0f3_c.jpg" width="800" height="800" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">'))
+  .skip(53.3421347, 7.1852983, 'wo 12/7 34:15', 0, flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/53041750087/in/datetaken-public/" title="Untitled"><img src="https://live.staticflickr.com/65535/53041750087_3ba1a8a61c_c.jpg" width="800" height="600" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">'))
+  .goto(52.5210987, 5.8908002, 'do 13/7 23:15', '🎂🎂')
+  .goto.mark(51.2406477, 2.9161213,  'vr 14/7 25:00', 'Vi snakkes!')
+  </script>
 </body>
 </html>
