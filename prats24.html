@@ -56,7 +56,7 @@
    )
    .add
     ( L.control.scale({metric: true, imperial: false})
-      L.control.locate()
+    , L.control.locate()
     )
     .select(window.location.search.slice(1).split('&').filter(x => x))
 
