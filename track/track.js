@@ -159,7 +159,7 @@ track.point = function (section, type, lat, lon, tit, msg, html, fn) {
   this.tit  = tit  || ''
   this.msg  = msg  || ''
   this.html = html || ''
-  this.on   = fn   || noop
+  this.fn   = fn   || noop
 }
 
 track.point.prototype.show = function (track) {
