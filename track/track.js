@@ -119,8 +119,8 @@ track.prototype._icon = memo(function (c) {
   return this.leaflet.divIcon({className: c, iconSize: null})
 })
 
-track.prototype._add = function (line, point, lat, lon, tit, msg, html) {
-  const p = new track.point (this.current, point, lat, lon, tit, msg, html)
+track.prototype._add = function (line, point, lat, lon, tit, msg, html, fn) {
+  const p = new track.point (this.current, point, lat, lon, tit, msg, html, fn)
   this.points.push(p)
   if (this.points.length > 1)
     this.lines.push(new track.line (this.current, line, this.last.lat, this.last.lon, lat, lon))
@@ -148,7 +148,9 @@ track.prototype._segments = function () {
   this.branches.forEach(b => b._segments())
 }
 
-track.point = function (section, type, lat, lon, tit, msg, html) {
+function noop () {}
+
+track.point = function (section, type, lat, lon, tit, msg, html, fn) {
   this.sections = section ? [section] : []
   this.type = type
   this.lat = lat
@@ -157,6 +159,7 @@ track.point = function (section, type, lat, lon, tit, msg, html) {
   this.tit  = tit  || ''
   this.msg  = msg  || ''
   this.html = html || ''
+  this.on   = fn   || noop
 }
 
 track.point.prototype.show = function (track) {
@@ -165,6 +168,7 @@ track.point.prototype.show = function (track) {
     if (this.tit)
       m.bindPopup(`<h3>${this.tit}</h3>${this.msg}${this.html}`)
     m.addTo(track.map)
+    m.on('popupopen', this.fn)
   }
 }
 
