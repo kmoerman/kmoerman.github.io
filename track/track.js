@@ -148,8 +148,6 @@ track.prototype._segments = function () {
   this.branches.forEach(b => b._segments())
 }
 
-function noop () {}
-
 track.point = function (section, type, lat, lon, tit, msg, html, fn) {
   this.sections = section ? [section] : []
   this.type = type
@@ -159,16 +157,18 @@ track.point = function (section, type, lat, lon, tit, msg, html, fn) {
   this.tit  = tit  || ''
   this.msg  = msg  || ''
   this.html = html || ''
-  this.fn   = fn   || noop
+  this.fn   = fn   || 0
 }
 
 track.point.prototype.show = function (track) {
   if (track.includes(...this.sections)) {
     const m = new track.leaflet.marker ([this.lat, this.lon], {icon: track._icon(`point ${this.sections.map(s => `section-${s}`).join(' ')} point-${this.type}`) })
-    if (this.tit)
+    if (this.tit) {
       m.bindPopup(`<h3>${this.tit}</h3>${this.msg}${this.html}`)
+      if (this.fn)
+        track.map.on('popupopen', this.fn)
+    }
     m.addTo(track.map)
-    m.on('popupopen', this.fn)
   }
 }
 
