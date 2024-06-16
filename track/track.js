@@ -99,6 +99,10 @@ track.prototype.section = function (s) {
     p.sections.push(s)
 }
 
+track.prototype.raw = function (f) {
+  f(this.map)
+}
+
 track.prototype.includes = function (...ss) {
   if (ss.length === 0)
     return true
@@ -119,8 +123,8 @@ track.prototype._icon = memo(function (c) {
   return this.leaflet.divIcon({className: c, iconSize: null})
 })
 
-track.prototype._add = function (line, point, lat, lon, tit, msg, html, fn) {
-  const p = new track.point (this.current, point, lat, lon, tit, msg, html, fn)
+track.prototype._add = function (line, point, lat, lon, tit, ...html) {
+  const p = new track.point (this.current, point, lat, lon, tit, ...html)
   this.points.push(p)
   if (this.points.length > 1)
     this.lines.push(new track.line (this.current, line, this.last.lat, this.last.lon, lat, lon))
@@ -148,26 +152,20 @@ track.prototype._segments = function () {
   this.branches.forEach(b => b._segments())
 }
 
-track.point = function (section, type, lat, lon, tit, msg, html, fn) {
+track.point = function (section, type, lat, lon, tit, ...html) {
   this.sections = section ? [section] : []
   this.type = type
   this.lat = lat
   this.lon = lon
 
-  this.tit  = tit  || ''
-  this.msg  = msg  || ''
-  this.html = html || ''
-  this.fn   = fn   || 0
+  this.html = [tit ? `<h3>${tit}</h3>` : '', ...html.filter(x => x)].join('')
 }
 
 track.point.prototype.show = function (track) {
   if (track.includes(...this.sections)) {
     const m = new track.leaflet.marker ([this.lat, this.lon], {icon: track._icon(`point ${this.sections.map(s => `section-${s}`).join(' ')} point-${this.type}`) })
-    if (this.tit) {
-      m.bindPopup(`<h3>${this.tit}</h3>${this.msg}${this.html}`)
-      if (this.fn)
-        track.map.on('popupopen', this.fn)
-    }
+    if (this.html)
+      m.bindPopup(this.html)
     m.addTo(track.map)
   }
 }

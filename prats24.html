@@ -47,8 +47,8 @@
     return `<a class="flickr" href="${lnk}"><img src="${img}" /></a>`;
   }
 
-  function audio (url) {
-    return `<div class="essential_audio" style="margin: 1.5em 0; width: 0;" data-url="${url}"></div>`
+  function audio (url, {loop=false}) {
+    return `<div class="essential_audio" style="margin: 1.5em 0; width: 0;" data-url="${url}" ${loop ? 'data-loop' : ''}></div>`
   }
 
   const T = track.from (L
@@ -93,7 +93,12 @@
     .goto.part(45.1997098, 5.6690731)
     .goto(44.8182514, 5.9474203, 'ma 10/6', 0, flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/53783030434" title="Untitled"><img src="https://live.staticflickr.com/65535/53783030434_a8d32d3652_h.jpg" width="1600" height="1600" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8">'))
     .goto.part(44.5352255, 6.3855404)
-    .goto.mark(44.4122771077932, 6.5428130424239495, 'di 11/6', audio("Prats.mp3"), flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/53784652966" title="Untitled"><img src="https://live.staticflickr.com/65535/53784652966_96f6e51f75_h.jpg" width="1600" height="1200" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"'), ()=>Essential_Audio.init() )
+    .goto.mark(44.4122771077932, 6.5428130424239495, 'di 11/6', audio("Prats.mp3", {loop:true}), flickr('<a data-flickr-embed="true" href="https://www.flickr.com/photos/198383566@N06/53784652966" title="Untitled"><img src="https://live.staticflickr.com/65535/53784652966_96f6e51f75_h.jpg" width="1600" height="1200" alt="Untitled"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"'))
+    .raw(map => {
+      const ea = Essential_Audio
+      map.on('popupopen' , ea.init)
+      map.on('popupclose', ea.Stop)
+    })
   </script>
 </body>
 </html>
