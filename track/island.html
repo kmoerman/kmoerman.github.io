@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Les Prats 2024</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    :root {
+      --button-protrusion: 0;
+    }
+
+    .essential-audio {
+
+    }
+    
+    .section-south {
+      --track-color: #de3abd;
+    }
+    .section-north {
+      --track-color: #f084da;
+    }
+    
+    h3 {
+      margin-bottom: 0.2em;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="track.js"></script>
+  <script>
+    var Messages =
+    [{"ToCountry":"CA","ToState":"British Columbia","SmsMessageSid":"SM6527d2ef929baf57d1726d5e88606d2d","NumMedia":"0","ToCity":"","FromZip":"53211","SmsSid":"SM6527d2ef929baf57d1726d5e88606d2d","FromState":"WI","SmsStatus":"received","FromCity":"MILWAUKEE","Body":"We posten hier af en toe een bericht per SMS, afhankelijk van netwerk en batterij. Op de kaart kun je volgen waar we zijn.","FromCountry":"US","To":"+17786540518","ToZip":"","MessageSid":"SM6527d2ef929baf57d1726d5e88606d2d","AccountSid":"***","From":"+14142190070","ApiVersion":"2010-04-01","Time":"2014-06-29T13:16:10.586Z","_time":"2014-06-29T13:16:10.586Z"}
+    ,{"ToCountry":"CA","ToState":"British Columbia","SmsMessageSid":"SMa61e7269deeb5fc1f2fbf1167df0b637","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMa61e7269deeb5fc1f2fbf1167df0b637","FromState":"","SmsStatus":"received","FromCity":"","Body":"Hjartaliga vaelkomin a Torshavn. 570 zeemijl, 20 knopen, golven 3 a 4 meter, wind 15 a 20 m/s. Nog 275 zeemijl voor de boeg.","FromCountry":"BE","To":"+17786540518","ToZip":"","MessageSid":"SMa61e7269deeb5fc1f2fbf1167df0b637","AccountSid":"***","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2014-07-02T16:05:57.718Z","_time":"2014-07-02T16:05:57.718Z"}
+    ,{"ToCountry":"CA","ToState":"British Columbia","SmsMessageSid":"SMb26cfa046682320e9d7cc55ab1fa62cf","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMb26cfa046682320e9d7cc55ab1fa62cf","FromState":"","SmsStatus":"received","FromCity":"","Body":"Aangekomen te Seydisfjordur, nu bus tot Egilsstadir, daarna begint het echt.","FromCountry":"BE","To":"+17786540518","ToZip":"","MessageSid":"SMb26cfa046682320e9d7cc55ab1fa62cf","AccountSid":"***","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2014-07-03T09:29:42.368Z","Lat":65.26005,"Lon":-14.00825,"_time":"2014-07-03T09:29:42.368Z"}
+    ,{Lat: 65.26093392509217, Lon: -14.399500336145811, Time: "2014-07-03T12:30:42.368Z", track:['skip','mark']}
+    ,{"ToCountry":"CA","ToState":"British Columbia","SmsMessageSid":"SMa2ae2084305ba57e159b27395976a7b3","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMa2ae2084305ba57e159b27395976a7b3","FromState":"","SmsStatus":"received","FromCity":"","Body":"Gisteren tweede nacht hier doorgebracht. Net als dag voordien heel de nacht regen.","FromCountry":"BE","To":"+17786540518","ToZip":"","MessageSid":"SMa2ae2084305ba57e159b27395976a7b3","AccountSid":"***","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2014-07-05T19:03:26.072Z","Lat":64.901583,"Lon":-15.294186,"_time":"2014-07-05T19:03:26.072Z"}
+    ,{"ToCountry":"CA","ToState":"British Columbia","SmsMessageSid":"SM5ccd08ffeadbb032f85d166b8df6590a","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM5ccd08ffeadbb032f85d166b8df6590a","FromState":"","SmsStatus":"received","FromCity":"","Body":"Deze morgen gewacht tot na de regen, uiteindelijk in de late namiddag vertrokken. Vanavond slapen we in de Laugarfell hut, warmwaterbronnen incluis. Sofdu unga!","FromCountry":"BE","To":"+17786540518","ToZip":"","MessageSid":"SM5ccd08ffeadbb032f85d166b8df6590a","AccountSid":"***","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2014-07-05T20:15:43.985Z","Lat":64.885206,"Lon":-15.351779,"_time":"2014-07-05T20:15:43.985Z"}
+    ,{"ToCountry":"CA","ToState":"British Columbia","SmsMessageSid":"SMdd56340b812989e6fac2b42714340612","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMdd56340b812989e6fac2b42714340612","FromState":"","SmsStatus":"received","FromCity":"","Body":"Gisteren gepasseerd langs de Karahnjukar dam. Geslapen in oude herdershut, vuil maar droog, opnieuw met warmwaterbronnen.","FromCountry":"BE","To":"+17786540518","ToZip":"","MessageSid":"SMdd56340b812989e6fac2b42714340612","AccountSid":"***","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2014-07-07T19:39:45.003Z","Lat":65.005712,"Lon":-15.763289,"_time":"2014-07-07T19:39:45.003Z"}
+    ,{"ToCountry":"CA","ToState":"British Columbia","SmsMessageSid":"SM230e8f83b4af280104b0a335e54c1d3f","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM230e8f83b4af280104b0a335e54c1d3f","FromState":"","SmsStatus":"received","FromCity":"","Body":"Meegelift met sympathieke Zwitsers, nog drietal uur gestapt door maanlandschap. Vannacht in kleine trekkersshelter in Arnardalur.","FromCountry":"BE","To":"+17786540518","ToZip":"","MessageSid":"SM230e8f83b4af280104b0a335e54c1d3f","AccountSid":"***","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2014-07-07T19:44:13.499Z","Lat":65.155004,"Lon":-15.957642,"_time":"2014-07-07T19:44:13.499Z"}
+    ,{"ToCountry":"CA","ToState":"British Columbia","SmsMessageSid":"SMb3c8cc92a98a268c626e23bdc4d9d1e4","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMb3c8cc92a98a268c626e23bdc4d9d1e4","FromState":"","SmsStatus":"received","FromCity":"","Body":"Dorstigen gelaafd, hongerigen gespijsd; wij trokken gisteren de woestijn in en kampeerden tussen de lava.","FromCountry":"BE","To":"+17786540518","ToZip":"","MessageSid":"SMb3c8cc92a98a268c626e23bdc4d9d1e4","AccountSid":"***","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2014-07-10T11:09:30.509Z","Lat":65.097733,"Lon":-16.167659,"_time":"2014-07-10T11:09:30.509Z"}
+    ,{"ToCountry":"CA","ToState":"British Columbia","SmsMessageSid":"SMe35bc3e7c3a614b2628cb419658f949d","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMe35bc3e7c3a614b2628cb419658f949d","FromState":"","SmsStatus":"received","FromCity":"","Body":"Na eindeloos stappen en klemmen moet Askja's warmwaterbronzwemmen door 't barslechte weer een andere keer; ze zullen ons echter niet temmen.","FromCountry":"BE","To":"+17786540518","ToZip":"","MessageSid":"SMe35bc3e7c3a614b2628cb419658f949d","AccountSid":"***","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2014-07-11T17:12:37.666Z","Lat":65.041718,"Lon":-16.594961,"_time":"2014-07-11T17:12:37.666Z", track: ['goto','mark']}
+    ,{"ToCountry":"CA","ToState":"British Columbia","SmsMessageSid":"SM3aa38bcdd9e8945d8162908557dafbda","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM3aa38bcdd9e8945d8162908557dafbda","FromState":"","SmsStatus":"received","FromCity":"","Body":"Gisteren Askja doorkruist tot Dyngjufell hut. Weetje van de dag: 'dyngja' staat voor 'shieldvolcano'. Komende dagen richting Myvatn.","FromCountry":"BE","To":"+17786540518","ToZip":"","MessageSid":"SM3aa38bcdd9e8945d8162908557dafbda","AccountSid":"***","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2014-07-13T11:08:40.433Z","Lat":65.124958,"Lon":-16.920817,"_time":"2014-07-13T11:08:40.433Z"}
+    ,{"ToCountry":"CA","ToState":"British Columbia","SmsMessageSid":"SM328ac282f51b0defd13a5f82c0bee2eb","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM328ac282f51b0defd13a5f82c0bee2eb","FromState":"","SmsStatus":"received","FromCity":"","Body":"Vannacht in Botni geslapen.","FromCountry":"BE","To":"+17786540518","ToZip":"","MessageSid":"SM328ac282f51b0defd13a5f82c0bee2eb","AccountSid":"***","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2014-07-14T10:04:56.207Z","Lat":65.269534,"Lon":-17.068044,"_time":"2014-07-14T10:04:56.207Z"}
+    ,{"ToCountry":"CA","ToState":"British Columbia","SmsMessageSid":"SMa334b8bcf2c7f692762e6dd569f5af57","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMa334b8bcf2c7f692762e6dd569f5af57","FromState":"","SmsStatus":"received","FromCity":"","Body":"Allo, ons' vrienden in het vaderland! Vanavond schapen tellen in Sellandasel; smerig, maar droog en uit de wind.","FromCountry":"BE","To":"+17786540518","ToZip":"","MessageSid":"SMa334b8bcf2c7f692762e6dd569f5af57","AccountSid":"***","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2014-07-14T18:30:31.522Z","Lat":65.461221,"Lon":-17.091068,"_time":"2014-07-14T18:30:31.522Z"}
+    ,{"ToCountry":"CA","ToState":"British Columbia","SmsMessageSid":"SM307758cab134061c2d67bf7d4bd79deb","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM307758cab134061c2d67bf7d4bd79deb","FromState":"","SmsStatus":"received","FromCity":"","Body":"Gisterenavond aangekomen te Myvatn. Zwemmen verboden in het broedseizoen, maar een warme douche op de camping deed ook deugd.","FromCountry":"BE","To":"+17786540518","ToZip":"","MessageSid":"SM307758cab134061c2d67bf7d4bd79deb","AccountSid":"***","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2014-07-16T10:47:32.983Z","Lat":65.640945,"Lon":-16.914133,"_time":"2014-07-16T10:47:32.983Z", track: ['goto','mark']}
+    ,{"ToCountry":"CA","ToState":"British Columbia","SmsMessageSid":"SMf45a9c58bbffc4d43098c7058a064f2a","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMf45a9c58bbffc4d43098c7058a064f2a","FromState":"","SmsStatus":"received","FromCity":"","Body":"Onderweg naar Borgarnes in het westen; halte Akureyri, een stad warempel.","FromCountry":"BE","To":"+17786540518","ToZip":"","MessageSid":"SMf45a9c58bbffc4d43098c7058a064f2a","AccountSid":"***","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2014-07-16T23:59:37.022Z","Lat":65.678324,"Lon":-18.100142,"_time":"2014-07-16T23:59:37.022Z", track: ['skip','part']}
+    ,{"ToCountry":"CA","ToState":"British Columbia","SmsMessageSid":"SMbb80e0643dffac9d726fcdd050c826cc","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMbb80e0643dffac9d726fcdd050c826cc","FromState":"","SmsStatus":"received","FromCity":"","Body":"Kamperen naast de zee in Borgarnes, laatste tussenstop op weg naar de far west; Westfjorden en Hornstrandir.","FromCountry":"BE","To":"+17786540518","ToZip":"","MessageSid":"SMbb80e0643dffac9d726fcdd050c826cc","AccountSid":"***","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2014-07-18T00:20:11.440Z","Lat":64.551356,"Lon":-21.908959,"_time":"2014-07-18T00:20:11.440Z", track: ['skip']}
+    ,{"ToCountry":"CA","ToState":"British Columbia","SmsMessageSid":"SM15a2d6b9ce040e5eeeb583bf7bcb5875","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM15a2d6b9ce040e5eeeb583bf7bcb5875","FromState":"","SmsStatus":"received","FromCity":"","Body":"Bus terminal Holmavik, poging tot liften.","FromCountry":"BE","To":"+17786540518","ToZip":"","MessageSid":"SM15a2d6b9ce040e5eeeb583bf7bcb5875","AccountSid":"***","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2014-07-18T23:28:42.043Z","Lon":-21.6994535,"Lat":65.7015765,"_time":"2014-07-18T23:28:42.043Z", track: ['skip','part']}
+    ,{"ToCountry":"CA","ToState":"British Columbia","SmsMessageSid":"SMde6d4deafdc307bcc822daefec6075b5","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMde6d4deafdc307bcc822daefec6075b5","FromState":"","SmsStatus":"received","FromCity":"","Body":"Twee perfecte autostops tot in Dalbaer; einde van de weg. Vanaf morgen opnieuw te voet, door de Westfjorden.","FromCountry":"BE","To":"+17786540518","ToZip":"","MessageSid":"SMde6d4deafdc307bcc822daefec6075b5","AccountSid":"***","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2014-07-18T23:33:26.920Z","Lat":66.100718,"Lon":-22.571304,"_time":"2014-07-18T23:33:26.920Z", track:['skip','mark']}
+    ,{"ToCountry":"CA","ToState":"British Columbia","SmsMessageSid":"SM21a0a8ad70eec81aad3285c0c2137dae","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM21a0a8ad70eec81aad3285c0c2137dae","FromState":"","SmsStatus":"received","FromCity":"","Body":"Stevige tocht, check; fjord, check; gletsjer, check; watervallen, check, zeehonden, check; groeten, check.","FromCountry":"BE","To":"+17786540518","ToZip":"","MessageSid":"SM21a0a8ad70eec81aad3285c0c2137dae","AccountSid":"***","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2014-07-20T18:00:13.008Z","Lat":66.220179,"Lon":-22.568836,"_time":"2014-07-20T18:00:13.008Z"}
+    ,{"ToCountry":"CA","ToState":"British Columbia","SmsMessageSid":"SMfc60d589f23b3c45fa3aabe5b8016890","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMfc60d589f23b3c45fa3aabe5b8016890","FromState":"","SmsStatus":"received","FromCity":"","Body":"Deze morgen fjord geford bij laagwater, dan langs kust tot aan hutje in Hrafnfjordur, waarmee we het Hornstrandir natuurreservaat intreden.","FromCountry":"BE","To":"+17786540518","ToZip":"","MessageSid":"SMfc60d589f23b3c45fa3aabe5b8016890","AccountSid":"***","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2014-07-20T19:46:03.809Z","Lat":66.26686,"Lon":-22.370659,"_time":"2014-07-20T19:46:03.809Z"}
+    ,{"ToCountry":"CA","ToState":"British Columbia","SmsMessageSid":"SM024be62943d085987e2599c3a5d86e15","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM024be62943d085987e2599c3a5d86e15","FromState":"","SmsStatus":"received","FromCity":"","Body":"Op 21 juli tien uur gestapt naar Reykjarfjordur, onze ziel en ons hart waren u gewijd. Daarna rustdag met warm zwembad.","FromCountry":"BE","To":"+17786540518","ToZip":"","MessageSid":"SM024be62943d085987e2599c3a5d86e15","AccountSid":"***","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2014-07-23T22:17:25.789Z","Lat":66.25774,"Lon":-22.088292,"_time":"2014-07-23T22:17:25.789Z"}
+    ,{"ToCountry":"CA","ToState":"British Columbia","SmsMessageSid":"SM56adf165f5d8f227e8e0bfaafacfd4b9","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM56adf165f5d8f227e8e0bfaafacfd4b9","FromState":"","SmsStatus":"received","FromCity":"","Body":"A perfect day off at Reykjarfordur. Hot pools, warm people and a smoking piece of lamb. Skal, takk fyrir!","FromCountry":"BE","To":"+17786540518","ToZip":"","MessageSid":"SM56adf165f5d8f227e8e0bfaafacfd4b9","AccountSid":"***","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2014-07-23T22:38:55.375Z","_time":"2014-07-23T22:38:55.375Z"}
+    ,{"ToCountry":"CA","ToState":"British Columbia","SmsMessageSid":"SMc50299a0d039278f760849f8e55ad13c","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMc50299a0d039278f760849f8e55ad13c","FromState":"","SmsStatus":"received","FromCity":"","Body":"Mooie en zonnige tocht langs de noordkust. Vossen, arenden en zeehonden a volonte. We eindigen de dag met een kampvuur van Siberisch hout.","FromCountry":"BE","To":"+17786540518","ToZip":"","MessageSid":"SMc50299a0d039278f760849f8e55ad13c","AccountSid":"***","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2014-07-23T22:43:57.981Z","Lat":66.208785,"Lon":-21.911915,"_time":"2014-07-23T22:43:57.981Z"}
+    ,{"ToCountry":"CA","ToState":"British Columbia","SmsMessageSid":"SMcca1f5ad09b503c4c1508b7ffad99872","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMcca1f5ad09b503c4c1508b7ffad99872","FromState":"","SmsStatus":"received","FromCity":"","Body":"We staan op een idyllisch kampeerplekje met privestrand. Morgen terug de bewoonde wereld in.","FromCountry":"BE","To":"+17786540518","ToZip":"","MessageSid":"SMcca1f5ad09b503c4c1508b7ffad99872","AccountSid":"***","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2014-07-24T19:15:57.916Z","Lat":66.117745,"Lon":-21.766046,"_time":"2014-07-24T19:15:57.916Z"}
+    ,{"ToCountry":"CA","ToState":"British Columbia","SmsMessageSid":"SM978942c29eab9f5bfdb244f515076902","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM978942c29eab9f5bfdb244f515076902","FromState":"","SmsStatus":"received","FromCity":"","Body":"Na een week terug in de bewoonde wereld, onze voettocht loopt ten einde. We duimen voor een lift zuidwaarts.","FromCountry":"BE","To":"+17786540518","ToZip":"","MessageSid":"SM978942c29eab9f5bfdb244f515076902","AccountSid":"***","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2014-07-25T22:35:34.034Z","Lat":66.0499085,"Lon":-21.708888833333333,"_time":"2014-07-25T22:35:34.034Z", track: ['goto','mark']}
+    ,{"ToCountry":"CA","ToState":"British Columbia","SmsMessageSid":"SMdffddacd6c4ad4c533c668f88f590420","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMdffddacd6c4ad4c533c668f88f590420","FromState":"","SmsStatus":"received","FromCity":"","Body":"Duchtig doorgelift tot Drangsnes, waar we weeral wekend wachten in warm water.","FromCountry":"BE","To":"+17786540518","ToZip":"","MessageSid":"SMdffddacd6c4ad4c533c668f88f590420","AccountSid":"***","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2014-07-25T22:53:12.790Z","Lat":65.688334,"Lon":-21.448102,"_time":"2014-07-25T22:53:12.790Z", track: ['skip']}
+    ,{"ToCountry":"CA","ToState":"British Columbia","SmsMessageSid":"SM898e9e23a1e06c05b39849e75dc23eff","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM898e9e23a1e06c05b39849e75dc23eff","FromState":"","SmsStatus":"received","FromCity":"","Body":"Een schot in de roos. Vlotte rit met lokale visser-jager-walvisvaarder; comfortabel gezeten bovenop twee karabijnen.","FromCountry":"BE","To":"+17786540518","ToZip":"","MessageSid":"SM898e9e23a1e06c05b39849e75dc23eff","AccountSid":"***","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2014-07-26T22:27:05.129Z","Lat":64.172435,"Lon":-21.690611,"_time":"2014-07-26T22:27:05.129Z", track: ['skip']}
+    ,{"ToCountry":"CA","ToState":"British Columbia","SmsMessageSid":"SMcd80d0544e50a5c2201f8cb9f544e615","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMcd80d0544e50a5c2201f8cb9f544e615","FromState":"","SmsStatus":"received","FromCity":"","Body":"Dagje onder de toeristen in Thingvellir; vuilste broek, langste baard, hoera! Wegens drukte bergop gevlucht.","FromCountry":"BE","To":"+17786540518","ToZip":"","MessageSid":"SMcd80d0544e50a5c2201f8cb9f544e615","AccountSid":"***","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2014-07-27T21:28:52.457Z","Lat":64.276913,"Lon":-21.092049,"_time":"2014-07-27T21:28:52.457Z", track: ['skip','mark']}
+    ,{"ToCountry":"CA","ToState":"British Columbia","SmsMessageSid":"SMe2825eddc15664984d0b9a7bfac4d3a0","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMe2825eddc15664984d0b9a7bfac4d3a0","FromState":"","SmsStatus":"received","FromCity":"","Body":"Gedaan met die loodzware zakken, de voeten ontslaan van travakken; een warmwaterbad in Reykjavik-stad, en voorts nog wat pinten gaan pakken.","FromCountry":"BE","To":"+17786540518","ToZip":"","MessageSid":"SMe2825eddc15664984d0b9a7bfac4d3a0","AccountSid":"***","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2014-07-29T20:02:35.279Z","Lat":64.150806,"Lon":-21.942943,"_time":"2014-07-29T20:02:35.279Z", track: ['skip']}
+    ,{"ToCountry":"CA","ToState":"British Columbia","SmsMessageSid":"SM131dbc67722b60b890778e864f5ade5f","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM131dbc67722b60b890778e864f5ade5f","FromState":"","SmsStatus":"received","FromCity":"","Body":"Met deze gevleugelde woorden nemen wij afscheid van IJsland; bless bless!","FromCountry":"BE","To":"+17786540518","ToZip":"","MessageSid":"SM131dbc67722b60b890778e864f5ade5f","AccountSid":"***","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2014-07-30T17:46:22.342Z","Lat":63.996806,"Lon":-22.623471,"_time":"2014-07-30T17:46:22.342Z", track: ['skip']}]
+    Messages.forEach(m => m._time = new Date (m.Time))
+    Messages.sort((a,b) => a._time - b._time)
+  </script>
+  <script>
+  const T = track.from (L
+    , { goto: 1
+      , skip: 1
+      , jump: 1
+      }
+    , { mark: 4
+      , [track.default]: 3
+      , part: 2
+      , none: 1
+      }
+    , { legacy: (t, ...xs) => xs.reduce((t, x) => t.goto(...x), t) }
+    )
+   .show(
+    'map',
+    [[65, -19], 7],
+    {attribution: '<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}
+   )
+   .add
+    ( L.control.scale({metric: true, imperial: false})
+    )
+
+  function go (T, track) {
+    console.log(track)
+    return track.reduce((T, t) => T[t], T)
+  }
+
+  function text (s) {
+    if (!s) return 0
+
+    else return `<p style="max-width: 12em">${s}</p>`
+  }
+    
+  Messages.reduce((T, m) => m.Lat ? go(T, m.track||['goto'])(m.Lat, m.Lon, m.Time.substr(0, 10).split('-').reverse().join('/'), text(m.Body)) : T, T)
+    
+
+  </script>
+</body>
+</html>
