@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ísland 2014</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    :root {
+      --button-protrusion: 0;
+    }
+    
+    h3 {
+      margin-bottom: 0.2em;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="track.js"></script>
+  <script>
+    var Messages =
+    [{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM45b685a18007329813ebcfc12f2ca153","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM45b685a18007329813ebcfc12f2ca153","FromState":"","SmsStatus":"received","FromCity":"","Body":"Ready, Set, Glasgo!","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM45b685a18007329813ebcfc12f2ca153","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2016-07-30T08:16:04.853Z","Lat":55.857255,"Lon":-4.255286,"_time":"2016-07-30T08:16:04.853Z",track:['goto','mark']}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM43c764ff3275a5c7766a03974c26b6b5","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM43c764ff3275a5c7766a03974c26b6b5","FromState":"","SmsStatus":"received","FromCity":"","Body":"Na een lange rit test Skye morgen onze limits.","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM43c764ff3275a5c7766a03974c26b6b5","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2016-07-30T22:27:28.570Z","Lat":57.290258,"Lon":-6.175572,"_time":"2016-07-30T22:27:28.570Z",track:['skip']}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM669755c8b4244e389c5cd76a2dbd17b1","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM669755c8b4244e389c5cd76a2dbd17b1","FromState":"","SmsStatus":"received","FromCity":"","Body":"Goed geslapen aan de zee, schapen blaatten luidkeels mee.","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM669755c8b4244e389c5cd76a2dbd17b1","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2016-08-01T11:35:34.263Z","Lat":57.218117,"Lon":-6.023877,"_time":"2016-08-01T11:35:34.263Z"}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM260af0c314ab8aa20bf49e0f3dc00ac8","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM260af0c314ab8aa20bf49e0f3dc00ac8","FromState":"","SmsStatus":"received","FromCity":"","Body":"Een vroege kampplaats in Camasunary...","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM260af0c314ab8aa20bf49e0f3dc00ac8","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2016-08-01T16:07:04.185Z","Lat":57.190291,"Lon":-6.112272,"_time":"2016-08-01T16:07:04.185Z"}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SMaf1dbd747b2320f2290f42ba8f5bde26","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMaf1dbd747b2320f2290f42ba8f5bde26","FromState":"","SmsStatus":"received","FromCity":"","Body":"... en een topje voor de liefhebber.","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SMaf1dbd747b2320f2290f42ba8f5bde26","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2016-08-01T16:08:54.794Z","Lat":57.195795,"Lon":-6.138927,"_time":"2016-08-01T16:08:54.794Z"}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM64bf381ae8449c5c68435473cb976d1f","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM64bf381ae8449c5c68435473cb976d1f","FromState":"","SmsStatus":"received","FromCity":"","Body":"Nacht doorgebracht bovenop turfstekkerij na bevoorrading en korte rit.","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM64bf381ae8449c5c68435473cb976d1f","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2016-08-03T21:01:52.740Z","Lat":57.454191,"Lon":-6.181237,"_time":"2016-08-03T21:01:52.740Z"}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM6944d5547efbaadb7e3c9bc83692d6d9","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM6944d5547efbaadb7e3c9bc83692d6d9","FromState":"","SmsStatus":"received","FromCity":"","Body":"Op de drukste dag van het jaar de highland games en hoofdstad Portree ontvlucht naar Loch Snizort. Vanaf morgen drie dagen Trotternish Ridge.","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM6944d5547efbaadb7e3c9bc83692d6d9","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2016-08-03T21:14:43.177Z","Lat":57.587484,"Lon":-6.380707,"_time":"2016-08-03T21:14:43.177Z"}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM9582f041db3b24073ad9b7602067e9ae","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM9582f041db3b24073ad9b7602067e9ae","FromState":"","SmsStatus":"received","FromCity":"","Body":"Slapen op de richel, mooiste kampeerplek ooit, na stevige klim langs Old Man of Storr.","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM9582f041db3b24073ad9b7602067e9ae","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2016-08-04T19:39:07.123Z","Lat":57.517886,"Lon":-6.186773,"_time":"2016-08-04T19:39:07.123Z"}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM5a0702e6dccab8302ff508aeed2c6f48","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM5a0702e6dccab8302ff508aeed2c6f48","FromState":"","SmsStatus":"received","FromCity":"","Body":"The Storr beklommen bij zonsopgang, goeiemorgen!","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM5a0702e6dccab8302ff508aeed2c6f48","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2016-08-05T04:59:35.300Z","Lat":57.507119,"Lon":-6.183093,"_time":"2016-08-05T04:59:35.300Z"}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SMa88a44211eb77fdf7ca2490561b2c021","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMa88a44211eb77fdf7ca2490561b2c021","FromState":"","SmsStatus":"received","FromCity":"","Body":"Gestrand, uig tegen muig. Morgenochtend boot naar Harris op de Outer Hebrides.","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SMa88a44211eb77fdf7ca2490561b2c021","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2016-08-05T18:27:01.150Z","Lon":null,"_time":"2016-08-05T18:27:01.150Z"}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SMdbbcd5bdae8f577126d9835c0b40f085","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMdbbcd5bdae8f577126d9835c0b40f085","FromState":"","SmsStatus":"received","FromCity":"","Body":"Bye bye Skye, hi Harris!","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SMdbbcd5bdae8f577126d9835c0b40f085","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2016-08-06T09:19:09.715Z","Lat":57.711306,"Lon":-6.564857,"_time":"2016-08-06T09:19:09.715Z"}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM989d73f747e90d1d8199392f728bd2f5","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM989d73f747e90d1d8199392f728bd2f5","FromState":"","SmsStatus":"received","FromCity":"","Body":"Doorweekt, op droge humor na, maar we gooien de handdoek nog niet in de ring. En wie wordt afgedroogd in Manillen?","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM989d73f747e90d1d8199392f728bd2f5","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2016-08-06T17:34:41.220Z","Lat":57.919777,"Lon":-6.680825,"_time":"2016-08-06T17:34:41.220Z"}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM3d2e42feb3636a4c4c84461dd3dd9ddf","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM3d2e42feb3636a4c4c84461dd3dd9ddf","FromState":"","SmsStatus":"received","FromCity":"","Body":"When galeforce reared its ugly head, they bravely turned their tails and fled; three brave Belgians turned about, and gallantly they chickened out.","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM3d2e42feb3636a4c4c84461dd3dd9ddf","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2016-08-08T15:05:13.940Z","Lat":57.89749,"Lon":-6.79856,"_time":"2016-08-08T15:05:13.940Z"}
+    ,{"Lat":56.64975357167469, "Lon":-4.843442014336776, "Time":"2016-08-08T23:45:47.362Z", track: ['skip']}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SMfdb253bdbfcbb06ba75fa9ff7a0ad7c0","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMfdb253bdbfcbb06ba75fa9ff7a0ad7c0","FromState":"","SmsStatus":"received","FromCity":"","Body":"Groetjes uit het Lake District. God save the knieen.","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SMfdb253bdbfcbb06ba75fa9ff7a0ad7c0","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2016-08-09T12:45:47.362Z","Lat":54.426157,"Lon":-2.962072,"_time":"2016-08-09T12:45:47.362Z",track:['skip']}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SMc7a25a5a5c7b7f39b3e6d4ecf696d026","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMc7a25a5a5c7b7f39b3e6d4ecf696d026","FromState":"","SmsStatus":"received","FromCity":"","Body":"Wildkamperen verboden; wij kamperen steeds rustig.","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SMc7a25a5a5c7b7f39b3e6d4ecf696d026","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2016-08-09T19:58:42.210Z","Lat":54.410069,"Lon":-3.058775,"_time":"2016-08-09T19:58:42.210Z"}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM095eaf98aa9d8be9947a8e16e1c029a0","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM095eaf98aa9d8be9947a8e16e1c029a0","FromState":"","SmsStatus":"received","FromCity":"","Body":"Regen en storm hielden vannacht aan...","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM095eaf98aa9d8be9947a8e16e1c029a0","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2016-08-11T12:05:39.895Z","Lat":54.425572,"Lon":-3.130921,"_time":"2016-08-11T12:05:39.895Z"}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SMf74479f596a7dd43ed91df719eac2519","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMf74479f596a7dd43ed91df719eac2519","FromState":"","SmsStatus":"received","FromCity":"","Body":"... wij druipen af.","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SMf74479f596a7dd43ed91df719eac2519","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2016-08-11T12:08:14.047Z","Lat":54.4441161,"Lon":-3.1027053,"_time":"2016-08-11T12:08:14.047Z"}
+    ]
+    Messages.forEach(m => m._time = new Date (m.Time))
+    Messages.sort((a,b) => a._time - b._time)
+  </script>
+  <script>
+  const T = track.from (L
+    , { goto: 1
+      , skip: 1
+      , jump: 1
+      }
+    , { mark: 4
+      , [track.default]: 3
+      , part: 2
+      , none: 1
+      }
+    , { legacy: (t, ...xs) => xs.reduce((t, x) => t.goto(...x), t) }
+    )
+   .show(
+    'map',
+    [[56, -5], 6],
+    {attribution: '<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}
+   )
+   .add
+    ( L.control.scale({metric: true, imperial: false})
+    )
+
+  function go (T, track) {
+    console.log(track)
+    return track.reduce((T, t) => T[t], T)
+  }
+
+  function text (s) {
+    if (!s) return 0
+
+    else return `<p style="max-width: 12em">${s}</p>`
+  }
+    
+  Messages.reduce((T, m) => m.Lat ? go(T, m.track||['goto'])(m.Lat, m.Lon, m.Time.substr(0, 10).split('-').reverse().join('/'), text(m.Body)) : T, T)
+    
+
+  </script>
+</body>
+</html>
