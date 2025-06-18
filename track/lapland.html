@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ísland 2014</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    :root {
+      --button-protrusion: 0;
+    }
+    
+    h3 {
+      margin-bottom: 0.2em;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="track.js"></script>
+  <script>
+    var Messages =
+    [{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM3e52059bde6df5eb7db336beaa75b851","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM3e52059bde6df5eb7db336beaa75b851","FromState":"","SmsStatus":"received","FromCity":"","Body":"Tussenstop in het zuidelijke Oslo.","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM3e52059bde6df5eb7db336beaa75b851","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-07-18T21:14:26.654Z","Lat":59.911689,"Lon":10.747656}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM07e50fafdee12fc861dc5bb2b93ab68f","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM07e50fafdee12fc861dc5bb2b93ab68f","FromState":"","SmsStatus":"received","FromCity":"","Body":"Tøssenstop Tromsø","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM07e50fafdee12fc861dc5bb2b93ab68f","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-07-19T18:33:19.540Z","Lat":69.648031,"Lon":18.960267, track:['jump','mark']}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM7f1a708f998217f51d8ef0b191819df5","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM7f1a708f998217f51d8ef0b191819df5","FromState":"","SmsStatus":"received","FromCity":"","Body":"Drie fijne liften, nu wachten op ferry.","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM7f1a708f998217f51d8ef0b191819df5","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-07-20T15:47:44.236Z","Lat":68.420711,"Lon":15.989635,track:['skip','part']}
+    ,{"Lat":67.258899776268, "Lon":15.392068426259144, "Time":"2017-07-20T15:48:44.236Z", track: ['skip','part']}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM412d2a8669f5481e84de408bf3b14d99","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM412d2a8669f5481e84de408bf3b14d99","FromState":"","SmsStatus":"received","FromCity":"","Body":"Vertrek uit Sulitjelma, via Nordkalottleden naar Padjelanta.","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM412d2a8669f5481e84de408bf3b14d99","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-07-21T07:37:25.583Z","Lat":67.122774,"Lon":16.095368,track:['skip','mark']}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM4e9b6ebd1dbf593ba8001414d68eca43","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM4e9b6ebd1dbf593ba8001414d68eca43","FromState":"","SmsStatus":"received","FromCity":"","Body":"Straks zweten? Zweden sowieso!","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM4e9b6ebd1dbf593ba8001414d68eca43","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-07-22T10:12:19.156Z","Lat":67.157101,"Lon":16.201851}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SMd80421b01e890071fe07488dc48359f6","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMd80421b01e890071fe07488dc48359f6","FromState":"","SmsStatus":"received","FromCity":"","Body":"22 juli","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SMd80421b01e890071fe07488dc48359f6","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-07-26T19:47:08.971Z","Lat":67.232659,"Lon":16.477282}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SMd6a414120fa7086c31f010e0d9e0cad8","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMd6a414120fa7086c31f010e0d9e0cad8","FromState":"","SmsStatus":"received","FromCity":"","Body":"23 juli","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SMd6a414120fa7086c31f010e0d9e0cad8","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-07-26T19:48:39.832Z","Lat":67.317926,"Lon":16.686875}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM323eadc3cd521f5fd29b13404b79d557","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM323eadc3cd521f5fd29b13404b79d557","FromState":"","SmsStatus":"received","FromCity":"","Body":"24 juli","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM323eadc3cd521f5fd29b13404b79d557","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-07-26T19:50:24.947Z","Lat":67.431539,"Lon":16.858687}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM7bd7342b9155e77dd168801b48e60abd","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM7bd7342b9155e77dd168801b48e60abd","FromState":"","SmsStatus":"received","FromCity":"","Body":"25 juli","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM7bd7342b9155e77dd168801b48e60abd","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-07-26T19:51:34.217Z","Lat":67.543479,"Lon":16.967965}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SMebe93d67162ce18765ba5869bd9e1b55","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMebe93d67162ce18765ba5869bd9e1b55","FromState":"","SmsStatus":"received","FromCity":"","Body":"Eindsprint tot Anonjalmme...","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SMebe93d67162ce18765ba5869bd9e1b55","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-07-26T19:56:27.808Z","Lat":67.6474081,"Lon":17.3702052}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SMdd9c954a6f4d87542979ea851bda9f7e","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMdd9c954a6f4d87542979ea851bda9f7e","FromState":"","SmsStatus":"received","FromCity":"","Body":"... net op tijd voor de laatste boot naar Ritsem.","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SMdd9c954a6f4d87542979ea851bda9f7e","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-07-26T19:59:50.973Z","Lat":67.722269,"Lon":17.46964,track:['skip','mark']}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM2e15e17c16cc0172fa7de5e946564937","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM2e15e17c16cc0172fa7de5e946564937","FromState":"","SmsStatus":"received","FromCity":"","Body":"Even uitwijken voor inkopen, en voor de rendieren op de baan.","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM2e15e17c16cc0172fa7de5e946564937","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-07-27T12:55:44.812Z","Lat":67.135262,"Lon":20.654656,track:['skip','part']}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SMf630c50fc85a4d0ee68c71fd958827d3","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMf630c50fc85a4d0ee68c71fd958827d3","FromState":"","SmsStatus":"received","FromCity":"","Body":"Comissie volbracht, morgen begint deel twee: door Sarek.","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SMf630c50fc85a4d0ee68c71fd958827d3","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-07-27T20:45:17.499Z","Lat":67.41307,"Lon":18.54409,track:['skip']}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM3995437124ab085abd10020f8dc3f782","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM3995437124ab085abd10020f8dc3f782","FromState":"","SmsStatus":"received","FromCity":"","Body":"Via Suorva de wildernis in. Tot over een week!","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM3995437124ab085abd10020f8dc3f782","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-07-28T12:20:45.699Z","Lat":67.526184,"Lon":18.204147,track:['skip']}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM32706cb20157790680f57c4e7b24f148","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM32706cb20157790680f57c4e7b24f148","FromState":"","SmsStatus":"received","FromCity":"","Body":"28 juli","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM32706cb20157790680f57c4e7b24f148","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-08-05T08:25:12.805Z","Lat":67.423562,"Lon":18.094166}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM7a3a481576cb755ed20307ca3e1ce00d","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM7a3a481576cb755ed20307ca3e1ce00d","FromState":"","SmsStatus":"received","FromCity":"","Body":"29 juli","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM7a3a481576cb755ed20307ca3e1ce00d","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-08-05T08:26:46.732Z","Lat":67.385346,"Lon":17.883098}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM5dbc4d020bc02ed02eb4df97b05f4fbf","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM5dbc4d020bc02ed02eb4df97b05f4fbf","FromState":"","SmsStatus":"received","FromCity":"","Body":"30 juli","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM5dbc4d020bc02ed02eb4df97b05f4fbf","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-08-05T08:28:32.503Z","Lat":67.368132,"Lon":17.67958}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM1a8bd0c6d0d751ea9a68d5a1c6c9f5a1","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM1a8bd0c6d0d751ea9a68d5a1c6c9f5a1","FromState":"","SmsStatus":"received","FromCity":"","Body":"Top 31 juli","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM1a8bd0c6d0d751ea9a68d5a1c6c9f5a1","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-08-05T08:30:41.622Z","Lat":67.397824,"Lon":17.515243}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM4e14001d5b11b20328f2f08016b47e76","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM4e14001d5b11b20328f2f08016b47e76","FromState":"","SmsStatus":"received","FromCity":"","Body":"31 juli, 1 augustus","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM4e14001d5b11b20328f2f08016b47e76","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-08-05T08:31:57.193Z","Lat":67.372488,"Lon":17.544812}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM1663f21c5110020d136c11414f2c2304","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM1663f21c5110020d136c11414f2c2304","FromState":"","SmsStatus":"received","FromCity":"","Body":"2 augustus","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM1663f21c5110020d136c11414f2c2304","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-08-05T08:33:32.785Z","Lat":67.342361,"Lon":17.215362}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SMefbc8ea14b03c1cb5296af128ca34016","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMefbc8ea14b03c1cb5296af128ca34016","FromState":"","SmsStatus":"received","FromCity":"","Body":"3 augustus","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SMefbc8ea14b03c1cb5296af128ca34016","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-08-05T08:34:33.118Z","Lat":67.268429,"Lon":17.034661}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SMcc1a12f4fee2e56e67fef4ed39d58815","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMcc1a12f4fee2e56e67fef4ed39d58815","FromState":"","SmsStatus":"received","FromCity":"","Body":"Aankomst Staloluokta 4 augustus.","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SMcc1a12f4fee2e56e67fef4ed39d58815","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-08-05T08:36:55.564Z","Lat":67.318372,"Lon":16.697314}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM5738ec5fdd871bd71fedcd25bdf8df6b","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM5738ec5fdd871bd71fedcd25bdf8df6b","FromState":"","SmsStatus":"received","FromCity":"","Body":"Per helikopter vlot terug naar Ritsem, waar de voorraad voedsel ons opwacht.","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM5738ec5fdd871bd71fedcd25bdf8df6b","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-08-05T11:28:03.254Z","Lat":67.717141,"Lon":17.479177,track:['skip','mark']}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM7372ade6c9e6ba4c93134e912035b3c8","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM7372ade6c9e6ba4c93134e912035b3c8","FromState":"","SmsStatus":"received","FromCity":"","Body":"6 augustus: helft te voet, helft gelift tot Sitasjaure...","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM7372ade6c9e6ba4c93134e912035b3c8","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-08-10T20:12:17.158Z","Lat":67.857855,"Lon":17.626362}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SMe69f4e00f5f09001745d431d72723588","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMe69f4e00f5f09001745d431d72723588","FromState":"","SmsStatus":"received","FromCity":"","Body":"... en wat verder gekampeerd, belaagd door muggen en een Nederlander.","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SMe69f4e00f5f09001745d431d72723588","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-08-10T20:15:21.198Z","Lat":67.872967,"Lon":17.784741}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SMc33ac1806d2ba1469b780ef0c281ed3e","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMc33ac1806d2ba1469b780ef0c281ed3e","FromState":"","SmsStatus":"received","FromCity":"","Body":"7 augustus: middagpauze in de stuga...","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SMc33ac1806d2ba1469b780ef0c281ed3e","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-08-10T20:16:59.187Z","Lat":67.9354237,"Lon":17.9676045}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM38b81474cb4684754f2c0d7be3ae24f6","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM38b81474cb4684754f2c0d7be3ae24f6","FromState":"","SmsStatus":"received","FromCity":"","Body":"... en eilandhoppen met de rafts.","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM38b81474cb4684754f2c0d7be3ae24f6","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-08-10T20:18:07.696Z","Lat":67.973163,"Lon":17.896825}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM92fcdec2973283cf04d84b3f51200797","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM92fcdec2973283cf04d84b3f51200797","FromState":"","SmsStatus":"received","FromCity":"","Body":"8 augustus: Gautelisvatnet afgepeddeld, en geschuild in de hytta.","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM92fcdec2973283cf04d84b3f51200797","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-08-10T20:34:45.147Z","Lat":68.038909,"Lon":17.837586}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM6ba0a2bb7ac3fb2a85e0af213e44c33c","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM6ba0a2bb7ac3fb2a85e0af213e44c33c","FromState":"","SmsStatus":"received","FromCity":"","Body":"9 augustus: stevige tocht door de mist.","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM6ba0a2bb7ac3fb2a85e0af213e44c33c","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-08-10T20:39:47.734Z","Lat":68.158745,"Lon":17.98692}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM66121e9fc91a42908ca106e23793961a","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM66121e9fc91a42908ca106e23793961a","FromState":"","SmsStatus":"received","FromCity":"","Body":"Pad afgewerkt, en meteen een reeks autostops richting bewoonde wereld, door het magnifieke Skjomen, en de Herjangsfjord nabij Narvik...","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM66121e9fc91a42908ca106e23793961a","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-08-10T20:47:11.194Z","Lat":68.1715887,"Lon":17.8982718}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SMa5020388844f5232a738af1529a21ddd","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMa5020388844f5232a738af1529a21ddd","FromState":"","SmsStatus":"received","FromCity":"","Body":"...tot in de haven van Harstad.","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SMa5020388844f5232a738af1529a21ddd","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-08-10T20:49:05.116Z","Lat":68.801271,"Lon":16.547321,track:['skip','part']}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM4cc86a8b5601af87f63358b49deacdce","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM4cc86a8b5601af87f63358b49deacdce","FromState":"","SmsStatus":"received","FromCity":"","Body":"Met de hurtigbåt aan 60 km/u via Finnsnes...","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM4cc86a8b5601af87f63358b49deacdce","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-08-10T20:53:38.795Z","Lat":69.227702,"Lon":17.98918,track:['skip','part']}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SMa01d71afcc0ef1723d53168696f29c3c","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMa01d71afcc0ef1723d53168696f29c3c","FromState":"","SmsStatus":"received","FromCity":"","Body":"... terug naar af: Tromsø.","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SMa01d71afcc0ef1723d53168696f29c3c","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-08-10T20:55:19.464Z","Lat":69.646749,"Lon":18.956012,track:['skip','mark']}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SMb621b2fe8df7e82f73d054d1247d5ea9","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMb621b2fe8df7e82f73d054d1247d5ea9","FromState":"","SmsStatus":"received","FromCity":"","Body":"Gisteren meegelift naar Lyngen met een Finse Zweed die artst in Noorwegen, en nachtelijke visles geeft.","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SMb621b2fe8df7e82f73d054d1247d5ea9","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-08-12T12:44:25.729Z","Lat":69.647988,"Lon":20.320869,track:['skip']}
+    ,{"Lat":69.57630246729703, "Lon":20.218860620897548, "Time":"2017-08-12T12:45:25.729Z", track:['skip']}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SMbf8827954204b909aa1ef81ef9d61dad","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SMbf8827954204b909aa1ef81ef9d61dad","FromState":"","SmsStatus":"received","FromCity":"","Body":"Uitsmijter door de Lyngenalpen.","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SMbf8827954204b909aa1ef81ef9d61dad","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-08-13T18:56:00.381Z","Lat":69.529063,"Lon":20.067653}
+    ,{"Lat":69.59673574287335, "Lon":19.904757400006478, "Time":"2017-08-13T21:40:29.461Z", track: ['goto','part']}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM41a5b9a582463b0f94eecdaf53635aae","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM41a5b9a582463b0f94eecdaf53635aae","FromState":"","SmsStatus":"received","FromCity":"","Body":"12u onderweg, morgen terugliften naar Tromsø.","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM41a5b9a582463b0f94eecdaf53635aae","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-08-13T21:41:29.461Z","Lat":69.523008,"Lon":19.728495,track:['skip']}
+    ,{"ToCountry":"BE","ToState":"Liege","SmsMessageSid":"SM20e9e62e3975fe8526b04700db1170c1","NumMedia":"0","ToCity":"","FromZip":"","SmsSid":"SM20e9e62e3975fe8526b04700db1170c1","FromState":"","SmsStatus":"received","FromCity":"","Body":"De kaart is Zweeds en bevat dus geen detailinformatie in Noorwegen; zoom voldoende uit om geen wit vlak te zien in het laatste stuk.","FromCountry":"BE","To":"+32460201523","ToZip":"","NumSegments":"1","MessageSid":"SM20e9e62e3975fe8526b04700db1170c1","From":"+32474756930","ApiVersion":"2010-04-01","Time":"2017-08-14T09:01:29.966Z"}
+    ]
+    Messages.forEach(m => m._time = new Date (m.Time))
+    Messages.sort((a,b) => a._time - b._time)
+  </script>
+  <script>
+  const T = track.from (L
+    , { goto: 1
+      , skip: 1
+      , jump: 1
+      }
+    , { mark: 4
+      , [track.default]: 3
+      , part: 2
+      , none: 1
+      }
+    , { legacy: (t, ...xs) => xs.reduce((t, x) => t.goto(...x), t) }
+    )
+   .show(
+    'map',
+    [[69, 19], 6],
+    {attribution: '<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}
+   )
+   .add
+    ( L.control.scale({metric: true, imperial: false})
+    )
+
+  function go (T, track) {
+    console.log(track)
+    return track.reduce((T, t) => T[t], T)
+  }
+
+  function text (s) {
+    if (!s) return 0
+
+    else return `<p style="max-width: 12em">${s}</p>`
+  }
+    
+  Messages.reduce((T, m) => m.Lat ? go(T, m.track||['goto'])(m.Lat, m.Lon, m.Time.substr(0, 10).split('-').reverse().join('/'), text(m.Body)) : T, T)
+    
+
+  </script>
+</body>
+</html>
