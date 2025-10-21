@@ -122,22 +122,28 @@
       }
     });
 
-    function updateChartPoint(speed){
-      const pace = speedToPaceMinPerKm(speed);
-      chart.data.datasets[1].data = [{x: speed, y: pace}];
-      chart.update();
+  
+    function updateChartPoint(targetSpeed) {
+      const startData = chart.data.datasets[1].data[0];
+      const startSpeed = startData ? startData.x : targetSpeed;
+      const steps = 30;
+      let frame = 0;
+
+      const startPace = speedToPaceMinPerKm(startSpeed);
+      const targetPace = speedToPaceMinPerKm(targetSpeed);
+
+      const animate = () => {
+        frame++;
+        const t = frame / steps;
+        const currentSpeed = startSpeed + (targetSpeed - startSpeed) * t;
+        const currentPace = speedToPaceMinPerKm(currentSpeed);
+        chart.data.datasets[1].data = [{ x: currentSpeed, y: currentPace }];
+        chart.update('none');
+        if (frame < steps) requestAnimationFrame(animate);
+      };
+      animate();
     }
 
-    function updateFromSpeed(){
-      const s = parseSpeed(speedInput.value);
-      if (!isFinite(s)){
-        chart.data.datasets[1].data = [];
-        chart.update();
-        return;
-      }
-      paceInput.value = formatMinutesDecimalToMMSS(speedToPaceMinPerKm(s));
-      updateChartPoint(s);
-    }
 
     function updateFromPace(){
       const p = parsePace(paceInput.value);
