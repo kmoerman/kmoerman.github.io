@@ -40,10 +40,6 @@
       <div class="sm:col-span-2 flex gap-3 items-center mt-2">
         <button id="swap" type="button" class="px-4 py-2 bg-gray-100 rounded-lg text-sm hover:bg-gray-200">Swap source</button>
         <button id="clear" type="button" class="px-4 py-2 bg-red-50 text-red-600 rounded-lg text-sm hover:bg-red-100">Clear</button>
-
-        <div class="ml-auto text-right text-sm text-gray-500">
-          <div>Last updated: <span id="updated">—</span></div>
-        </div>
       </div>
 
       <fieldset class="sm:col-span-2 mt-3 border-t pt-4">
@@ -73,7 +69,6 @@
     const el = id => document.getElementById(id);
     const speedInput = el('speed');
     const paceInput = el('pace');
-    const updated = el('updated');
     const swapBtn = el('swap');
     const clearBtn = el('clear');
     const copySpeed = el('copySpeed');
@@ -141,7 +136,6 @@
         return;
       }
       paceInput.value = formatMinutesDecimalToMMSS(speedToPaceMinPerKm(s));
-      updated.textContent = nowStamp();
       updateChartPoint(s);
     }
 
@@ -154,7 +148,6 @@
       }
       const s = paceToSpeedKmH(p);
       speedInput.value = s.toFixed(2);
-      updated.textContent = nowStamp();
       updateChartPoint(s);
     }
 
@@ -162,7 +155,7 @@
     paceInput.addEventListener('input', () => { lastSource = 'pace'; updateFromPace(); });
 
     swapBtn.addEventListener('click', () => { if (lastSource === 'speed'){ lastSource = 'pace'; speedInput.blur(); paceInput.focus(); } else { lastSource = 'speed'; paceInput.blur(); speedInput.focus(); } });
-    clearBtn.addEventListener('click', () => { speedInput.value = ''; paceInput.value = ''; updated.textContent = '—'; chart.data.datasets[1].data = []; chart.update(); lastSource = 'speed'; speedInput.focus(); });
+    clearBtn.addEventListener('click', () => { speedInput.value = ''; paceInput.value = ''; chart.data.datasets[1].data = []; chart.update(); lastSource = 'speed'; speedInput.focus(); });
 
     document.querySelectorAll('.preset').forEach(b => { b.addEventListener('click', () => { const pace = b.dataset.pace; paceInput.value = pace; lastSource = 'pace'; updateFromPace(); }); });
 
