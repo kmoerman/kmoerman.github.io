@@ -144,6 +144,17 @@
       animate();
     }
 
+    function updateFromSpeed(){
+      const s = parseSpeed(speedInput.value);
+      if (!isFinite(s)){
+        chart.data.datasets[1].data = [];
+        chart.update();
+        return;
+      }
+      paceInput.value = formatMinutesDecimalToMMSS(speedToPaceMinPerKm(s));
+      updateChartPoint(s);
+    }
+
 
     function updateFromPace(){
       const p = parsePace(paceInput.value);
