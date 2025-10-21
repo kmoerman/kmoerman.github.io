@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Belgian Border</title>
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@7/turf.min.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+  <style>
+    body { margin: 0; padding: 0 }
+    #map { width: 100vw; height: 100vh }
+  </style>
+</head>
+<body>
+<div id="map"></div>
+
+<script>
+  mapboxgl.accessToken = 'pk.eyJ1Ijoia21vZXJtYW4iLCJhIjoiY21kYmo2azJpMHVkdjJpcXlkYWw4ZGN4NSJ9.7OlqiCLj9bNzm1Dmwnql6A'
+
+  const map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/light-v10',
+    center: [4.4699, 50.5039], // Approximate center of Belgium
+    zoom: 6
+  })
+
+  function lcFirst (s) {
+    return s.charAt(0).toLowerCase() + s.slice(1);
+  }
+
+  map.on('load', async () => {
+    // Load Belgium border GeoJSON
+
+    /*
+    const response = await fetch('./regionsgeweste-belgium.geojson')
+    const regions = await response.json()
+
+    const data = turf.union(turf.featureCollection(regions.features.map(feature => {
+      const C = turf[lcFirst(feature.geometry.type)]
+      return C(feature.geometry.coordinates)
+    })))
+    */
+
+    const response = await fetch('./belgium.geojson')
+    const data     = await response.json()
+
+
+    // Buffer the border by Dkm (converted to kilometers)
+    const D = 5
+    const b_neg = turf.buffer(data, -D, { units: 'kilometers' })
+    const b_pos = turf.buffer(data, +D, { units: 'kilometers' })
+
+  
+    const buffer = turf.difference(turf.featureCollection([b_pos, b_neg]))
+
+    // Add the buffered zone to the map
+    map.addSource('belgium-buffer', {
+      type: 'geojson',
+      data: buffer
+    })
+
+    map.addLayer({
+      id: 'buffer-zone',
+      type: 'fill',
+      source: 'belgium-buffer',
+      layout: {},
+      paint: {
+        'fill-color': '#ffeebc',
+        'fill-opacity': 0.4
+      }
+    })
+
+    // Optional: Draw original border
+    map.addSource('belgium-border', {
+      type: 'geojson',
+      data: data
+    })
+
+    map.addLayer({
+      id: 'border-line',
+      type: 'line',
+      source: 'belgium-border',
+      paint: {
+        'line-color': '#fe019a',
+        'line-width': 1
+      }
+    })
+
+
+    const rtrack = await fetch('./track.geojson')
+    const rdata = await rtrack.json()
+
+    map.addSource('gpx-track', {
+      type: 'geojson',
+      data: rdata
+    })
+  
+    map.addLayer({
+      id: 'gpx-track',
+      type: 'line',
+      source: 'gpx-track',
+      paint: {
+        'line-color': '#333',
+        'line-width': 2
+      }
+    })
+
+
+  })
+
+</script>
+</body>
+</html>
