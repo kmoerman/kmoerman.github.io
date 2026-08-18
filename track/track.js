@@ -74,12 +74,63 @@ function line (definition, proxy, track) {
   }})
 }
 
-track.prototype.show = function (id, [[lat,lon], z], options) {
+track.prototype.show = function (id, [[lat,lon], z], layers) {
   this.map = this.leaflet.map(id)
 
   this.map.setView([lat, lon], z)
-  const tiles = this.leaflet.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {detectRetina: true, ...options})
+  ;(layers instanceof Array ? layers : [layers || {}]).forEach(({url, ...options}) => {
+    const tiles = this.leaflet.tileLayer(url || 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', {detectRetina: true, ...options})
+    this.elements.push(tiles)
+  })
+
+  setTimeout(() => this._show(), 0)
+}
+
+track.prototype.showPolar3575 = function (id, [[lat, lon], zoom], options) {
+
+  const L = this.leaflet
+
+  // ---- CRS: EPSG:3575 (Arctic LAEA Europe)
+  const extent = 6378137 * Math.PI // standard Earth extent
+  const origin = [-extent, extent]
+
+  const minZoom = 0
+  const maxZoom = 18
+  const tileSize = 256
+
+  /*
+  const resolutions = []
+  for (let z = minZoom; z <= maxZoom; z++) {
+    resolutions.push((2 * extent) / (256 * Math.pow(2, z)));
+  }
+    */
+
+  //const resolutions = [32768, 16384, 8192, 4096, 2048, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1, 0.5, 0.25, 0.125]
+  const resolutions = [16384, 8192, 4096, 2048, 1024, 512, 256, 128, 64]
+
+  const crs = new L.Proj.CRS(
+    "EPSG:3575",
+    "+proj=laea +lat_0=90 +lon_0=10 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs",
+    { origin: [-4194304, 4194304]
+    , resolutions
+    , bounds: L.bounds([-4194304, -4194304], [4194304, 4194304])
+    }
+  )
+
+
+  this.map = L.map(id, {crs, center: [lat, lon], zoom})
+
+  //this.map.setView([lat, lon], zoom)
+  const tiles = L.tileLayer('https://basemap.arctic-sdi.org/mapcache/wmts/1.0.0/arctic_cascading/default/3575/{z}/{y}/{x}.png'
+    , { tileSize
+      , minZoom
+      , maxZoom
+      , noWrap: true
+      , attribution: "Arctic SDI"
+      , ...options})
   this.elements.push(tiles)
+
+  L.marker([78, 15]).addTo(this.map);
 
   setTimeout(() => this._show(), 0)
 }

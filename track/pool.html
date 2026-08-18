@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Arctic SDI EPSG:3575 Map</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@latest/ol.css">
+  <script src="https://cdn.jsdelivr.net/npm/proj4@2.8.0/dist/proj4.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ol@latest/dist/ol.js"></script>
+  <style>
+    body, html, #map { margin: 0; padding: 0; width: 100%; height: 100%; }
+  </style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+  // 1️⃣ Define EPSG:3575 in proj4
+  proj4.defs("EPSG:3575","+proj=laea +lat_0=90 +lon_0=10 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs");
+
+  // 2️⃣ Register with OpenLayers
+  ol.proj.proj4.register(proj4);
+
+  // Optional: define extent so OL can compute resolutions
+  const epsg3575 = ol.proj.get('EPSG:3575');
+  epsg3575.setExtent([-4194304, -4194304, 4194304, 4194304]);
+
+  // 3️⃣ Create map
+  const map = new ol.Map({
+    target: 'map',
+    layers: [
+      new ol.layer.Tile({
+        source: new ol.source.XYZ({
+          url: 'https://basemap.arctic-sdi.org/mapcache/wmts/1.0.0/arctic_cascading/default/3575/{z}/{y}/{x}.png',
+          attributions: 'Arctic SDI',
+          maxZoom: 8
+        })
+      })
+    ],
+    view: new ol.View({
+      projection: epsg3575,
+      center: [500000, -1200000], // Svalbard in meters
+      zoom: 2
+    })
+  });
+</script>
+</body>
+</html>
