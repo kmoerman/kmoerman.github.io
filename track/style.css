@@ -28,7 +28,7 @@ a.flickr img {
   margin: 0;
 }
 
-div.point {
+div.point:not(.point-peak) {
   display: block;
   border: 2px solid var(--track-color);
   border-radius: 50%;
