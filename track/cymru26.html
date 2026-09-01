@@ -39,7 +39,8 @@
       , skip: 1
       , jump: 1
       }
-    , { mark: 4
+    , { peak: 5
+      , mark: 4
       , [track.default]: 3
       , part: 2
       , none: 1
@@ -118,7 +119,7 @@
    .skip(51.75203, -3.37394, 'za 29/8')
    .branch(T => T.goto(51.75705, -3.39031, 'zo 30/8', 'Rustdag'))
    .branch(T => T.skip.part(51.84117, -3.38091)
-                  .goto.mark(51.88396, -3.43682, 'ma 31/8', '⛰️ Pen Y Fan')
+                  .goto.peak(51.88396, -3.43682, 'ma 31/8', '⛰️ Pen Y Fan')
                   .goto.part(51.87208, -3.47947))
    .raw(map => {
       const ea = Essential_Audio
