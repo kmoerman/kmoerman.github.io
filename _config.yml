@@ -3,6 +3,6 @@ plugins:
   - jekyll-remote-theme
 
 title: "Klaas Moerman"
-logo: /assets/img/logo.svg
+logo: /assets/img/logo-v2.svg
 show_downloads: false
 markdown: GFM
